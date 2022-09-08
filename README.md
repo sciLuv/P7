@@ -21,7 +21,10 @@ A REST API with CRUD operations, and a MySQL database who manage 3 tables.
 **Crypto-js** : package of cryptage. *use to crypt the email to avoid data leakage.*<br><br>
 **Bcript** : *to encrypt the password and compare encryption* with true password in the login.<br><br>
 **Jsonwebtoken** : *create token session* to verify if user have authorization to do all actions in the app, except creation of account and login.<br><br>
-**Multer** : to manage image in backend (get him name, and place).
+**Multer** : to manage image in backend (get him name, and place).<br><br>
+**cors** : allows to avoid various errors related to the HTTP CORS security.<br><br>
+**helmet** : increases the security of our http header returned not express.<br><br>
+**express-rate-limit** : allows to limit the requests to one api to avoid server overload.
 
 ### to install and use back-end : 
 
