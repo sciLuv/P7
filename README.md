@@ -14,19 +14,13 @@ A REST API with CRUD operations, and a MySQL database who manage 3 tables.
 
 **Express** : to create quickly backend server and it API <br><br>
 **Sequelize** : to create models of element of database (users, contents, comments) and make link with.<br><br>
-**Mysql2** : work with sequelize to push data to the database
-
-
-
+**Mysql2** : work with sequelize to push data to the database.<br><br>
 **Dotenv** : *to remove environnement variable* from code to a specific file for security.<br><br>
 **Password-validator** : configure password model to force user to do strong password.<br><br>
 **Validator** : package for verify data send by users. *Use for validate email format with a blacklist chard*.<br><br>
 **Crypto-js** : package of cryptage. *use to crypt the email to avoid data leakage.*<br><br>
 **Bcript** : *to encrypt the password and compare encryption* with true password in the login.<br><br>
 **Jsonwebtoken** : *create token session* to verify if user have authorization to do all actions in the app, except creation of account and login.<br><br>
-
-
-
 **Multer** : to manage image in backend (get him name, and place).
 
 ### to install and use back-end : 
