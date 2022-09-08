@@ -11,20 +11,26 @@
 A REST API with CRUD operations, and a MySQL database who manage 3 tables.  
 
 ### List of node not native backend package : 
-<span style="color:#87b9ff">**Express**</span> : to create quickly backend server and it API <br>
-<span style="color:#87b9ff">**Sequelize**</span> : to create models of element of database (users, contents, comments) and make link with.<br>
-<span style="color:#87b9ff">**Mysql2**</span> : work with sequelize to push data to the database.
 
-<span style="color:#87b9ff">**Dotenv**</span> : *to remove environnement variable* from code to a specific file for security.<br>
-<span style="color:#87b9ff">**Password-validator**</span> : configure password model to force user to do strong password.<br>
-<span style="color:#87b9ff">**Validator**</span> : package for verify data send by users. *Use for validate email format with a blacklist chard*.<br>
-<span style="color:#87b9ff">**Crypto-js**</span> : package of cryptage. *use to crypt the email to avoid data leakage.*<br>
-<span style="color:#87b9ff">**Bcript**</span> : *to encrypt the password and compare encryption* with true password in the login.<br>
-<span style="color:#87b9ff">**Jsonwebtoken**</span> : *create token session* to verify if user have authorization to do all actions in the app, except creation of account and login.<br>
+**Express** : to create quickly backend server and it API <br><br>
+**Sequelize** : to create models of element of database (users, contents, comments) and make link with.<br><br>
+**Mysql2** : work with sequelize to push data to the database
 
-<span style="color:#87b9ff">**Multer**</span> : to manage image in backend (get him name, and place).
+
+
+**Dotenv** : *to remove environnement variable* from code to a specific file for security.<br><br>
+**Password-validator** : configure password model to force user to do strong password.<br>
+**Validator** : package for verify data send by users. *Use for validate email format with a blacklist chard*.<br><br>
+**Crypto-js** : package of cryptage. *use to crypt the email to avoid data leakage.*<br><br>
+**Bcript** : *to encrypt the password and compare encryption* with true password in the login.<br><br>
+**Jsonwebtoken** : *create token session* to verify if user have authorization to do all actions in the app, except creation of account and login.<br><br>
+
+
+
+**Multer** : to manage image in backend (get him name, and place).
 
 ### to install and use back-end : 
+
 install nodeJS and its dependencies : ```npm install```<br>
 create a .env file and asign a value to environnement variables<br>
 run the server of the backend : ```nodemon app.js``` 
