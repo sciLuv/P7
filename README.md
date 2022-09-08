@@ -4,26 +4,27 @@
 **Its the 7th, and the last, project of the OpenClassrooms dev web course.**
 
 ## Frontend
-
+ (in work)
+ 
 ## Backend
 
-a REST API with CRUD operations, and a MySQL database who manage 3 tables.  
+A REST API with CRUD operations, and a MySQL database who manage 3 tables.  
 
 ### List of node not native backend package : 
-**Express** = to create quickly backend server and it API 
-**Sequelize** = to create models of element of database (users, contents, comments) and make link with.
-**Mysql2**
+**Express** : to create quickly backend server and it API <br>
+**Sequelize** : to create models of element of database (users, contents, comments) and make link with.<br>
+**Mysql2** : work with sequelize to push data to the database
 
-**Dotenv** = *to remove environnement variable* from code to a specific file for security
-**Password-validator** = configure password model to force user to do strong password
-**Validator** = package for verify data send by users. *Use for validate email format with a blacklist chard*  
-**Crypto-js** = package of cryptage. *use to crypt the email to avoid data leakage.*
-**Bcript** = *to encrypt the password and compare encryption* with true password in the login
-**Jsonwebtoken**= *create token session* to verify if user have authorization to do all actions in the app, except creation of account and login
+**Dotenv** : *to remove environnement variable* from code to a specific file for security.<br>
+**Password-validator** : configure password model to force user to do strong password.<br>
+**Validator** : package for verify data send by users. *Use for validate email format with a blacklist chard*.<br>
+**Crypto-js** : package of cryptage. *use to crypt the email to avoid data leakage.*<br>
+**Bcript** : *to encrypt the password and compare encryption* with true password in the login.<br>
+**Jsonwebtoken** : *create token session* to verify if user have authorization to do all actions in the app, except creation of account and login.<br>
 
-**Multer** = to manage image in backend (get him name, and place).
+**Multer** : to manage image in backend (get him name, and place).
 
 ### to install and use back-end : 
-install nodeJS and its dependencies : ```npm install```
-create a .env file and asign a value to environnement variables
+install nodeJS and its dependencies : ```npm install```<br>
+create a .env file and asign a value to environnement variables<br>
 run the server of the backend : ```nodemon app.js``` 
