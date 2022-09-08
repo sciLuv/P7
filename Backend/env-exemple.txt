@@ -1,0 +1,10 @@
+PORT= 'localisation of the server'
+
+MAIL_BLACKLIST_CHARS= 'list of chars forbidden in email'
+CRYPTO_JS_SENTENCE= 'secret sentence to crypt user's email'
+BCRYPT_SALT= salt number of round
+JWT_SENTENCE= 'secret sentence to encrypt password' 
+
+DB_NAME='name of the database'
+DB_USER='user's name if the database'
+DB_PASSWORD='password to access to the database'
