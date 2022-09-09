@@ -7,7 +7,7 @@ import { getContentComment, createOneComment, updateOneComment, deleteOneComment
 //middleware to verify if the user is connected
 import auth from '../middleware/auth.js'; 
 //middleware to verify if the user have the right to update or delete
-import haveRightComment from '../middleware/right-comment.js';
+import {haveRightComment} from '../middleware/right.js';
 
 //permet de chercher les commentaire d'un  contenues
 router.get('/:id/comment', auth, getContentComment);
