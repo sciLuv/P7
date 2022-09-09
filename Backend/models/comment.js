@@ -18,6 +18,16 @@ const Comment = db.define('comment', {
     text: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    like: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue : 0 
+    },
+    usersLike: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue : {users : []}
     }
 });
 

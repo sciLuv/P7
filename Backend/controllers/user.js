@@ -8,6 +8,7 @@ import fs from 'fs'; //here, to delete img files from backEnd
 
 import User from '../models/user.js'; //model of user
 import passwordSchema from '../models/password.js';//model of password 
+import Content from '../models/content.js';//model of content
 
 //to add an user to database. 
 //If email match with model waiting by validator.isEmail, it is crypted by cryptoJS
@@ -74,11 +75,16 @@ const login = (req, res) => {
     .catch(error =>{ res.status(500).json({ error } + "Une erreur de serveur est survenue." ) })
 };
 
+const profilContent = (req, res) => {
+    Content.findAll({where : {userId : req.params.id}})
+    .then(contents => res.status(200).json(contents))
+    .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
+}
 
 //to modify profil image
 //we create the path of new image, delete the old image from the backend with fs.unlink
 // and add the path of new image to user.imgURL 
-const profil = (req, res) => {
+const profilChangeImg = (req, res) => {
     const newImg = { imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` };
     User.findOne({where: {id: req.params.id}}) 
     .then(User => {
@@ -89,7 +95,7 @@ const profil = (req, res) => {
                 if (err) throw err;
                 console.log('Fichier supprimée.');
              });
-        } 
+        }
         User.imgUrl = newImg.imgUrl;
         User.save()
         .then(() => res.status(200).json({message : 'photo de profil modifiée.'}))
@@ -99,4 +105,4 @@ const profil = (req, res) => {
 }
 
 //exportation of the before declared functions for add them in the router
-export { signup, login, profil };
+export { signup, login, profilContent, profilChangeImg };

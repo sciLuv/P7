@@ -1,4 +1,5 @@
 import Comment from "../models/comment.js"; //model of comment
+import likeFunction from "../utilis/like-function.js"; //function to add like
 
 //find all the comments in link with one content
 const getContentComment = (req, res) => {
@@ -37,5 +38,8 @@ const deleteOneComment = (req, res) => {
     .catch(error => res.status(401).json( error  + "Une erreur de transmission de donnée est survenue."));
 }
 
+//to add or remove like to a content
+const likeComment = (req, res) => { likeFunction(Comment, req, res)};
+
 //exportation of the before declared functions for add them in the router
-export { getContentComment, createOneComment, updateOneComment, deleteOneComment };
+export { getContentComment, createOneComment, updateOneComment, deleteOneComment, likeComment };

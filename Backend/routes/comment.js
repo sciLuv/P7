@@ -3,7 +3,7 @@ import { Router } from 'express';
 const router = Router();
 
 //import all function to do all action in link with comment 
-import { getContentComment, createOneComment, updateOneComment, deleteOneComment} from '../controllers/comment.js';
+import { getContentComment, createOneComment, updateOneComment, deleteOneComment, likeComment} from '../controllers/comment.js';
 //middleware to verify if the user is connected
 import auth from '../middleware/auth.js'; 
 //middleware to verify if the user have the right to update or delete
@@ -17,5 +17,6 @@ router.post('/:id/comment', auth, createOneComment);
 router.put('/comment/:id', auth, haveRightComment, updateOneComment);
 //supprime un commentaire précédemment crée
 router.delete('/comment/:id', auth, haveRightComment, deleteOneComment);
-
+//POST to add or remove like to a content
+router.post('/comment/:id/like', auth, likeComment);
 export default router;

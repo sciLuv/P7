@@ -1,5 +1,6 @@
 import Content from "../models/content.js"; //model of content
 import fs from 'fs'; // for delete image
+import likeFunction from "../utilis/like-function.js"; //function to add like
 
 //get infos of all the contents 
 const getAll = (req, res) => {
@@ -66,34 +67,8 @@ const deleteOne = (req, res) => {
     .catch(error => res.status(401).json( error  + "Une erreur de transmission de donnée est survenue."));
 };
 
-//to manage like number of content and the array
-//after finding the content in db in function if user Id is...
-//...in array content them if user have alredy liked the content.
-//if user doesn't have like we push his id to the array and add one like
-//in the other case, we do the opposite
-const like = (req, res) => {
-    Content.findOne({where : {id :req.params.id}})
-    .then( Content => {
-            let usersLikeArray = Content.usersLike.users;
-            let isLiked = usersLikeArray.findIndex((element) => element == req.auth.userId);
-            if(isLiked == -1){
-                usersLikeArray.push(req.auth.userId);
-                Content.like += 1
-            } else {
-                usersLikeArray.splice((isLiked), 1);
-                Content.like -= 1
-            }
-            let final = { users : usersLikeArray }
-            Content.usersLike = final;
-            Content.changed("usersLike", true)
-            Content.save()
-            .then(() => res.status(200).json({Content}))
-            .catch(error => res.status(401).json( error  + "Une erreur de transmission de donnée est survenue."));
-
-        }
-    )
-    .catch()
-};
+//to add or remove like to a content
+const like = (req, res) => { likeFunction(Content, req, res); };
 
 //exportation of the before declared functions for add them in the router
 export { getAll, createOne, updateOne, deleteOne, like };

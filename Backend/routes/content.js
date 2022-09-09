@@ -16,7 +16,7 @@ router.post('/', auth, uploadImg, createOne);
 router.put('/:id', auth, haveRightContent, uploadImg, updateOne);
 //DELETE the content, for the creator user and admin
 router.delete('/:id', auth, haveRightContent, deleteOne);
-//POST to add or remove like to a comment
+//POST to add or remove like to a content
 router.post('/:id/like', auth, like);
 
 
