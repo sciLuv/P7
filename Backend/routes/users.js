@@ -10,7 +10,7 @@ import { signup, login, profilContent, profilChangeImg } from '../controllers/us
 router.post('/signup', signup);
 //POST to connect user to the website (with adding session token)
 router.post('/login', login);
-
+//GET to have all content from an user
 router.get('/profil/:id', auth, haveRightContent, profilContent)
 //PUT to change user profil image
 router.put('/profil/:id', auth, haveRightContent, uploadImg, profilChangeImg);

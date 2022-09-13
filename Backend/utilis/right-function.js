@@ -1,5 +1,3 @@
-import User from '../models/user.js'; // model of user
-
 function rightFunction(User, contentOrComment, req, res, next){
     User.findOne({ where : { id : req.auth.userId}})
     .then( user =>{

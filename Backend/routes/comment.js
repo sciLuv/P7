@@ -8,13 +8,15 @@ import { getContentComment, createOneComment, updateOneComment, deleteOneComment
 import auth from '../middleware/auth.js'; 
 //middleware to verify if the user have the right to update or delete
 import {haveRightComment} from '../middleware/right.js';
+//middleware to sanitize corpse of comment of his dangerous parts
+import sanitize from '../middleware/sanitize.js';
 
 //permet de chercher les commentaire d'un  contenues
 router.get('/:id/comment', auth, getContentComment);
 //crée un commentaire en lien avec un contenue
-router.post('/:id/comment', auth, createOneComment);
+router.post('/:id/comment', auth, sanitize, createOneComment);
 //modifie un commentaire précédement crée
-router.put('/comment/:id', auth, haveRightComment, updateOneComment);
+router.put('/comment/:id', auth, haveRightComment, sanitize, updateOneComment);
 //supprime un commentaire précédemment crée
 router.delete('/comment/:id', auth, haveRightComment, deleteOneComment);
 //POST to add or remove like to a content
