@@ -1,10 +1,25 @@
 import Content from "../models/content.js"; //model of content
 import fs from 'fs'; // for delete image
 import likeFunction from "../utilis/like-function.js"; //function to add like
+import User from '../models/user.js'; //model of user
+import Comment from "../models/comment.js"; //model of comment
 
 //get infos of all the contents 
 const getAll = (req, res) => {
-    Content.findAll()
+    Content.findAll({
+        include: {
+            model: User,
+            attributes: ['firstname', 'lastname', 'imgUrl']
+        },
+        include: {
+            model: Comment,
+            attributes: ['text', 'usersLike', 'like'],
+            include: {
+                model: User,
+                attributes: ['firstname', 'lastname', 'imgUrl']
+            }
+        }
+    })
     .then(contents => res.status(200).json(contents))
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
 };

@@ -1,9 +1,16 @@
 import Comment from "../models/comment.js"; //model of comment
+import User from '../models/user.js'; //model of user
 import likeFunction from "../utilis/like-function.js"; //function to add like
 
 //find all the comments in link with one content
 const getContentComment = (req, res) => {
-    Comment.findAll({where : { contentId : req.params.id }})
+    Comment.findAll({
+        where : { contentId : req.params.id },
+        include: {
+            model: User,
+            attributes: ['firstname', 'lastname', 'imgUrl']
+            }
+        })
     .then(comment => res.status(200).json(comment))
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission de donnée est survenue."));
 }

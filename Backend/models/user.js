@@ -1,5 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/db.js';
+import Comment from './comment.js';
+import Content from './content.js';
 
 const User = db.define('user', {
     firstname: {
@@ -28,5 +30,18 @@ const User = db.define('user', {
         allowNull: false,
     },
 });
+
+User.hasMany(Content, {
+    foreignKey: 'userId'
+});
+User.hasMany(Comment, {
+    foreignKey: 'userId'
+});
+Content.belongsTo(User);
+Content.hasMany(Comment, {
+    foreignKey: 'contentId'
+})
+Comment.belongsTo(User);
+Comment.belongsTo(Content);
 
 export default User;

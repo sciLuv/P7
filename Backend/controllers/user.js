@@ -9,6 +9,7 @@ import fs from 'fs'; //here, to delete img files from backEnd
 import User from '../models/user.js'; //model of user
 import passwordSchema from '../models/password.js';//model of password 
 import Content from '../models/content.js';//model of content
+import Comment from "../models/comment.js"; //model of comment
 
 //to add an user to database. 
 //If email match with model waiting by validator.isEmail, it is crypted by cryptoJS
@@ -75,8 +76,23 @@ const login = (req, res) => {
     .catch(error =>{ res.status(500).json({ error } + "Une erreur de serveur est survenue." ) })
 };
 
+//to get all content from one user and his profil. 
 const profilContent = (req, res) => {
-    Content.findAll({where : {userId : req.params.id}})
+    Content.findAll({
+        where : { userId : req.params.id },
+        include: {
+            model: User,
+            attributes: ['firstname', 'lastname', 'imgUrl']
+        },
+        include: {
+            model: Comment,
+            attributes: ['text', 'usersLike', 'like'],
+            include: {
+                model: User,
+                attributes: ['firstname', 'lastname', 'imgUrl']
+            }
+        }
+    })
     .then(contents => res.status(200).json(contents))
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
 }

@@ -4,7 +4,9 @@ import multer from 'multer'; //nodeJS package to manage importation of image to 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg': 'jpg',
-    'image/png': 'png'
+    'image/png': 'png',
+    'image/gif': 'gif',
+    'image/webp': 'webp'
   };
   
 //function that uses multer methods to retrieve the image and give it a specific name
