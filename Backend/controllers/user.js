@@ -28,6 +28,8 @@ const signup = (req, res) => {
                         ...body,
                         mail: cryptedMail,
                         password: hash,
+                        imgUrl: 'http://localhost:' + process.env.PORT + '/images/defaultAvatar.png',
+                        permission: false,
                     })
                     .then(() => res.status(201).json({ message: 'Utilisateur crée.' }))
                     .catch((error) => res.status(400).json({ error } + 'Une erreur de transmission de donnée est survenue.'));
@@ -105,7 +107,7 @@ const profilChangeImg = (req, res) => {
     User.findOne({where: {id: req.params.id}}) 
     .then(User => {
         const filename = User.imgUrl.split('/images/')[1];
-        if(User.imgUrl != `http://localhost:3005/images/defaultAvatar.png`){
+        if(User.imgUrl != 'http://localhost:' + process.env.PORT + '/images/defaultAvatar.png'){
             const filename = User.imgUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`,(err) => {
                 if (err) throw err;

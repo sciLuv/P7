@@ -26,15 +26,15 @@ app.use(cors());
 app.use(express.json());
 
 
-//implementation of the rules of limitation of request by IP
-const limiter = rateLimit({
-	windowMs: 5 * 60 * 1000, // 5 minutes
-	max: 15, // Limit each IP to 15 requests per `window` (here, per 5 minutes)
-	standardHeaders: true, //Returns the rate limit information in the `RateLimit-*` headers
-	legacyHeaders: false, //Disable `X-RateLimit-*` headers 
-})
-//Applies rate limiting middleware to all requests
-app.use(limiter);
+		/* 	//implementation of the rules of limitation of request by IP
+			const limiter = rateLimit({
+				windowMs: 5 * 60 * 1000, // 5 minutes
+				max: 15, // Limit each IP to 15 requests per `window` (here, per 5 minutes)
+				standardHeaders: true, //Returns the rate limit information in the `RateLimit-*` headers
+				legacyHeaders: false, //Disable `X-RateLimit-*` headers 
+			})
+			//Applies rate limiting middleware to all requests
+			app.use(limiter); */
 
 //permet d'appeler et d'acceder aux routes et à l'ensemble de leurs fonctionnalité
 app.use(contentRoutes);
