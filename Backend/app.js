@@ -10,6 +10,10 @@ import userRoutes from './routes/users.js'; //routes in charge of users
 import contentRoutes from './routes/content.js'; //routes in charge of contents
 import commentRoutes from './routes/comment.js'; //routes in charge of comments
 
+//Internal nodeJS package to work with file and directory paths.
+import path from 'path';
+import {fileURLToPath} from 'url';
+
 const app = express(); //Express call under the constant app.
 
 Db.sync() //sequelize method sync. to connect the backend to the database and sync models
@@ -35,6 +39,10 @@ app.use(express.json());
 			})
 			//Applies rate limiting middleware to all requests
 			app.use(limiter); */
+
+//makes the images accessible for all requests to the route associated with the images
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //permet d'appeler et d'acceder aux routes et à l'ensemble de leurs fonctionnalité
 app.use(contentRoutes);

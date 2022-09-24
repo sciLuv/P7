@@ -5,7 +5,7 @@ const router = Router();
 //middleware to verify if user have the right to change the profil image  
 import auth from '../middleware/auth.js'; 
 //same
-import { haveRightContent } from '../middleware/right.js'; 
+import { haveRightContent, haveRightUser} from '../middleware/right.js'; 
 //middleware to manage image in the backend
 import uploadImg from '../middleware/multer-config.js'; 
 //controllers for users
@@ -16,9 +16,9 @@ router.post('/signup', signup);
 //POST to connect user to the website (with adding session token)
 router.post('/login', login);
 //GET to have all content from an user
-router.get('/profil/:id', auth, haveRightContent, profilContent)
+router.get('/profil/:id', auth, profilContent)
 //PUT to change user profil image
-router.put('/profil/:id', auth, haveRightContent, uploadImg, profilChangeImg);
+router.put('/profil/:id', auth, haveRightUser, uploadImg, profilChangeImg);
 
 //exportation of the routes of users action to the app.js file
 export default router;

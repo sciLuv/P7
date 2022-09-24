@@ -11,7 +11,7 @@ const auth = (req, res, next) => {
         };
         next();
     } catch(error){
-        res.status(401).json({ msg : "vous n'avez pas l'authorisation de faire cette requete" });
+        res.status(401).json({ msg : "vous n'avez pas l'autorisation de faire cette requete" });
     }
 }
 

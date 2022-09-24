@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserAuth } from '../utilis/contextValue.jsx';
 
 function Login() {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
+    const authCtx = useContext(UserAuth);
+    console.log(authCtx);
 
     let handleSubmit = async (e) => {
         e.preventDefault();
@@ -14,16 +17,18 @@ function Login() {
                 password: password,
             }),
         };
-        fetch('http://localhost:3005/login', reqOptions)
+        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/login', reqOptions)
             .then((res) => res.json())
             .then((data) => {
                 sessionStorage.setItem('auth', data.token);
-                window.location.replace('http://localhost:3000/');
+                sessionStorage.setItem('userId', data.userId);
+                window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/');
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
     return (
         <form onSubmit={handleSubmit} className='container col-lg-12'>
             <h1 className='container col-xl-10 col-12 mt-3'>Se connecter</h1>

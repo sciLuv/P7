@@ -9,29 +9,23 @@ function Signup(props) {
 
     let handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            let res = await fetch('http://localhost:3005/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    firstname: firstname,
-                    lastname: lastname,
-                    mail: mail,
-                    password: password,
-                }),
-            });
-            if (res.status === 201) {
-                setFirstname('');
-                setLastname('');
-                setMail('');
-                setPassword('');
-                setMessage('User created successfully');
-            } else {
-                setMessage('Some error occured');
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        const reqOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstname: firstname,
+                lastname: lastname,
+                mail: mail,
+                password: password,
+            }),
+        };
+        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/signup', reqOptions)
+            .then((res) => res.json())
+            .then((data) => {
+                window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/login');
+                console.log(data);
+            })
+            .catch((err) => console.log(err));
     };
 
     return (
