@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Signup(props) {
     const [firstname, setFirstname] = useState('');
@@ -6,6 +7,8 @@ function Signup(props) {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+
+    const navigate = useNavigate();
 
     let handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,7 +25,7 @@ function Signup(props) {
         fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/signup', reqOptions)
             .then((res) => res.json())
             .then((data) => {
-                window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/login');
+                navigate('/login');
                 console.log(data);
             })
             .catch((err) => console.log(err));

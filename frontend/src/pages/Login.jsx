@@ -1,11 +1,15 @@
 import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
+
     const authCtx = useContext(UserAuth);
     console.log(authCtx);
+
+    const navigate = useNavigate();
 
     let handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,9 +24,14 @@ function Login() {
         fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/login', reqOptions)
             .then((res) => res.json())
             .then((data) => {
-                sessionStorage.setItem('auth', data.token);
-                sessionStorage.setItem('userId', data.userId);
-                window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/');
+                /*                 sessionStorage.setItem('auth', data.token);
+                sessionStorage.setItem('userId', data.userId); */
+                authCtx.login(data.token);
+                authCtx.saveId(data.userId);
+                authCtx.savePermission(data.userPermission);
+                console.log(authCtx);
+                navigate('/');
+                /* window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/'); */
             })
             .catch((err) => {
                 console.log(err);

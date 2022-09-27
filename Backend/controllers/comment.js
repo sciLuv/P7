@@ -6,6 +6,7 @@ import he from "he";
 //find all the comments in link with one content
 const getContentComment = (req, res) => {
     Comment.findAll({
+        order: [['createdAt', 'ASC']],
         where : { contentId : req.params.id },
         include: {
             model: User,
@@ -25,6 +26,7 @@ const createOneComment = (req, res) => {
     })
     .then(() => { 
         Comment.findAll({
+            order: [['createdAt', 'ASC']],
             where : { contentId : req.params.id },
             include: {
                 model: User,

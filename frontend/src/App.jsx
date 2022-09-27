@@ -1,20 +1,19 @@
 import Signup from './pages/Signup.jsx';
 import Login from './pages/Login.jsx';
-import HeaderBeforeConnect from './components/header/HeaderBeforeConnect.jsx';
-import HeaderConnected from './components/header/HeaderConnected.jsx';
+import Header from './components/Header.jsx';
 import { BrowserRouter, Route, Routes /* Link, useParams  */ } from 'react-router-dom';
 import Home from './pages/home.jsx';
+/* import { useContext } from 'react';
+import { IsLoginPage } from './utilis/contextLogin.jsx'; */
 
 function App() {
+    /*     let token = sessionStorage.getItem('auth');
+    const isLoginOrSignup = useContext(IsLoginPage); */
+
     return (
         <div>
             <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={<HeaderConnected />} />
-                    <Route path='/profil' element={<HeaderConnected />} />
-                    <Route path='/signup' element={<HeaderBeforeConnect />} />
-                    <Route path='/login' element={<HeaderBeforeConnect />} />
-                </Routes>
+                <Header />
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/signup' element={<Signup />} />

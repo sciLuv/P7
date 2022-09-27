@@ -68,7 +68,8 @@ const login = (req, res) => {
                             { userId: user.id },
                             process.env.JWT_SENTENCE,
                             { expiresIn: '24h' }
-                        )
+                        ),
+                        userPermission : user.permission
                     })
                 }
             })

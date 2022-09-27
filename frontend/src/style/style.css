@@ -1,0 +1,8 @@
+.fa-ellipsis{
+    opacity: 0;
+    cursor: pointer;
+}
+
+.comment:hover .fa-ellipsis{
+ opacity: 1;
+}

@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Comment from './Comment';
 import ContentLike from './likeContent';
+import { UserAuth } from '../utilis/contextValue.jsx';
 
 function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const [commentaries, setCommentaries] = useState(comments);
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [newComment, setNewComment] = useState('');
+
+    const authCtx = useContext(UserAuth);
+    console.log(authCtx);
 
     let handlePressKey = async (e) => {
         /* e.preventDefault(); */
@@ -14,7 +18,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + sessionStorage.getItem('auth'),
+                    Authorization: 'Bearer ' + authCtx.token,
                 },
                 body: JSON.stringify({
                     text: newComment,
@@ -60,11 +64,13 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                         <Comment
                             key={'comment' + comment.id}
                             text={comment.text}
+                            id={comment.id}
                             firstname={comment.user.firstname}
                             lastname={comment.user.lastname}
                             img={comment.user.imgUrl}
                             like={comment.like}
                             usersLike={comment.usersLike.users}
+                            userId={comment.userId}
                         />
                     ))}
 

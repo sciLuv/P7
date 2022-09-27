@@ -9,7 +9,7 @@ import he from "he";
 //get infos of all the contents 
 const getAll = (req, res) => {
     Content.findAll({
-        limit: 10, order: [['updatedAt', 'DESC']],
+        limit: 10, order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
         include: [
             {
                 model: User,
@@ -17,7 +17,7 @@ const getAll = (req, res) => {
             },
             {
                 model: Comment,
-                attributes: ['id','text', 'usersLike', 'like'],
+                attributes: ['id','text', 'usersLike', 'like', 'userId'],
                 include: {
                     model: User,
                     attributes: ['firstname', 'lastname', 'imgUrl']
@@ -46,7 +46,36 @@ const createOne = (req, res) => {
         userId : req.auth.userId,
         imgUrl: req.body.content && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
     })
-    .then(() => { res.status(201).json({message: 'le contenue est en ligne.'})})
+    .then(() => { 
+        Content.findAll({
+            limit: 10, order: [['updatedAt', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    attributes: ['firstname', 'lastname', 'imgUrl']
+                },
+                {
+                    model: Comment,
+                    attributes: ['id','text', 'usersLike', 'like'],
+                    include: {
+                        model: User,
+                        attributes: ['firstname', 'lastname', 'imgUrl']
+                    }
+                }
+            ]
+        })
+        .then(contents => {
+            for(const content in contents){
+                contents[content].text = he.decode(contents[content].text);
+                for(const comment in contents[content].comments){
+                    contents[content].comments[comment].text = he.decode(contents[content].comments[comment].text);
+                };
+            }
+            console.log(contents);
+            res.status(200).json(contents);
+        })
+        .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
+    })
     .catch(error => {res.status(400).json({error} + "Une erreur de transmission est survenue.")})
 };
 
@@ -79,6 +108,7 @@ const updateOne = (req, res) => {
 //if the content have a stored image in backend, delete it with fs.unlink and template litteral
 //finally we delete the Content from the db with destroy method of sequelize
 const deleteOne = (req, res) => {
+    console.log(Content);
     Content.findOne({where : {id :req.params.id}})
     .then(Content => {
         if(Content.imgUrl != null){

@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserAuth } from '../utilis/contextValue.jsx';
 
 function ContentLike(likes) {
-    let userLikeArray = Number(sessionStorage.getItem('userId'));
+    const authCtx = useContext(UserAuth);
+    let userLikeArray = authCtx.id;
     const [like, setLike] = useState(likes.likes);
     const [likeNum, setlikeNum] = useState(likes.usersLike.users.includes(userLikeArray));
+    console.log(likeNum);
+    console.log(like);
 
     let liking = async () => {
         const reqOptions = {
             method: 'POST',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('auth'),
+                Authorization: 'Bearer ' + authCtx.token,
             },
         };
         fetch(
@@ -31,7 +35,7 @@ function ContentLike(likes) {
             }}
         >
             <i className={(likeNum === true ? 'fa-solid ' : 'fa-regular ') + 'fa-thumbs-up me-1'}></i>
-            {like} {like <= 1 ? 'like' : 'likes'}
+            {like} {like <= 1 ? "j'aime" : "j'aimes"}
         </div>
     );
 }

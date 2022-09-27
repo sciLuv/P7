@@ -10,7 +10,7 @@ const Avatar = styled.img`
     height: 100%;
     object-fit: cover;
 `;
-function PostContent({ contentList, setContentList }) {
+function PostContent() {
     const [text, setText] = useState('');
     const [file, setFile] = useState(null);
 
@@ -42,10 +42,7 @@ function PostContent({ contentList, setContentList }) {
                 res.json();
             })
             .then((data) => {
-                console.log(data);
-                setContentList(contentList + 'hello');
-                console.log(contentList);
-                /* window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/'); */
+                window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/');
             })
             .catch((err) => {
                 console.log(err);
@@ -76,7 +73,7 @@ function PostContent({ contentList, setContentList }) {
                         onChange={(e) => setFile(e.target.files[0])} /* value={file} */
                     ></input>
                     <button type='submit' className='btn btn-primary'>
-                        Submit
+                        Publier
                     </button>
                 </div>
             </form>
