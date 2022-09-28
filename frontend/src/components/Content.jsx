@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 import colors from '../utilis/colors.jsx';
 import ContentInteraction from './ContentInteraction.jsx';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 const ContentContainer = styled.article`
     height: 100%;
@@ -56,6 +54,9 @@ function Content({
 
     const authCtx = useContext(UserAuth);
     const [modifContentOpen, setModifContentOpen] = useState(false);
+
+    console.log('testouille');
+    console.log(contentList);
 
     function newContent() {
         const reqOptions = {
@@ -182,7 +183,7 @@ function Content({
                     </div>
                 </form>
             ) : null}
-            <div>{text}</div>
+            <p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{text}</p>
             <div>
                 <img src={img} className='img-fluid' alt='' />
             </div>

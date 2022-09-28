@@ -17,7 +17,7 @@ const getAll = (req, res) => {
             },
             {
                 model: Comment,
-                attributes: ['id','text', 'usersLike', 'like', 'userId'],
+                attributes: ['id','text', 'usersLike', 'like', 'userId', 'contentId'],
                 include: {
                     model: User,
                     attributes: ['firstname', 'lastname', 'imgUrl']

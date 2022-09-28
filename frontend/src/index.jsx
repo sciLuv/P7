@@ -3,15 +3,12 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './utilis/contextValue.jsx';
-import { IsLoginProvider } from './utilis/contextLogin.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <AuthProvider>
-            <IsLoginProvider>
-                <App />
-            </IsLoginProvider>
+            <App />
         </AuthProvider>
     </React.StrictMode>
 );

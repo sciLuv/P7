@@ -6,3 +6,7 @@
 .comment:hover .fa-ellipsis{
  opacity: 1;
 }
+
+textarea {
+    white-space: pre-wrap;
+}

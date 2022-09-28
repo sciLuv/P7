@@ -83,20 +83,22 @@ const login = (req, res) => {
 const profilContent = (req, res) => {
     Content.findAll({
         where : { userId : req.params.id },
-        include: {
+        include: [{
             model: User,
             attributes: ['firstname', 'lastname', 'imgUrl']
         },
-        include: {
+         {
             model: Comment,
             attributes: ['text', 'usersLike', 'like'],
             include: {
                 model: User,
                 attributes: ['firstname', 'lastname', 'imgUrl']
             }
-        }
+        }]
     })
-    .then(contents => res.status(200).json(contents))
+    .then(contents => {
+        console.log();
+        res.status(200).json(contents)})
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
 }
 

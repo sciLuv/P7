@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 import { Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
-/* import { IsLoginPage } from '../utilis/contextLogin'; */
-import Login from '../pages/Login';
+import { UserAuth } from '../utilis/contextValue.jsx';
 
 const StyledHeader = styled.header`
     height: 50px;
@@ -19,7 +18,8 @@ const StyledLogo = styled.div`
 
 function HeaderConnected() {
     /* const isLoginOrSignup = useContext(IsLoginPage); */
-    let token = sessionStorage.getItem('auth');
+    const authCtx = useContext(UserAuth);
+    let token = authCtx.token;
     console.log(token);
 
     return (

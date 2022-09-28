@@ -13,8 +13,15 @@ const getContentComment = (req, res) => {
             attributes: ['firstname', 'lastname', 'imgUrl']
             }
         })
-    .then(comment => res.status(200).json(comment))
-    .catch(error => res.status(400).json({ error } + "Une erreur de transmission de donnée est survenue."));
+        .then(comments => { 
+            console.log(comments[0].text);
+            for(const comment in comments){
+                comments[comment].text = he.decode(comments[comment].text);
+            };
+            console.log(comments);
+            res.status(201).json(comments)
+        })
+        .catch(error => res.status(400).json({ error } + "Une erreur de transmission de donnée est survenue."));
 }
 
 //create a new comment in link with one content and one user (and their id)

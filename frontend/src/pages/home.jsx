@@ -20,6 +20,9 @@ function Home() {
     const authCtx = useContext(UserAuth);
     console.log(authCtx);
 
+    console.log('contentList');
+    console.log(contentList);
+
     useEffect(() => {
         const reqOptions = {
             method: 'GET',

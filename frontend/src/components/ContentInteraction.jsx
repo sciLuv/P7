@@ -5,9 +5,14 @@ import { UserAuth } from '../utilis/contextValue.jsx';
 
 function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const [commentaries, setCommentaries] = useState(comments);
+    console.log('_______________');
+    console.log(commentaries);
+    console.log('_______________');
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [newComment, setNewComment] = useState('');
 
+    console.log('COMMENT TEST');
+    console.log(commentaries);
     const authCtx = useContext(UserAuth);
     console.log(authCtx);
 
@@ -30,6 +35,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
             )
                 .then((res) => res.json())
                 .then((data) => {
+                    console.log('prout');
                     console.log(data.comments);
                     console.log(commentaries);
                     setCommentaries(data.comments);
@@ -71,6 +77,9 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                             like={comment.like}
                             usersLike={comment.usersLike.users}
                             userId={comment.userId}
+                            contentId={comment.contentId}
+                            commentaries={commentaries}
+                            setCommentaries={setCommentaries}
                         />
                     ))}
 
