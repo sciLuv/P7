@@ -13,6 +13,7 @@ const ContentContainer = styled.article`
 `;
 const AvatarImgContainer = styled.div`
     height: 40px;
+    width: 45px;
 `;
 const Avatar = styled.img`
     width: 100%;
@@ -41,6 +42,7 @@ function Content({
     contentList,
     setContentList,
 }) {
+    console.log('content');
     let servDate = date.split('T').join(' ').split('.000Z').join('');
     let time = servDate.split(/[- :]/);
     var formatedTime = new Date(Date.UTC(time[0], time[1] - 1, time[2], time[3], time[4], time[5]));
@@ -56,10 +58,6 @@ function Content({
     const authCtx = useContext(UserAuth);
     const [modifContentOpen, setModifContentOpen] = useState(false);
 
-    console.log('---------------CLA-------------------');
-    console.log(contentId);
-    console.log('---------------CLA-------------------');
-
     function newContent() {
         const reqOptions = {
             method: 'GET',
@@ -72,7 +70,6 @@ function Content({
                 return res.json();
             })
             .then((data) => {
-                console.log('hello');
                 setContentList(data);
             })
             .catch((err) => {
@@ -115,10 +112,8 @@ function Content({
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
                 newContent();
                 setModifContentOpen(false);
-                /* console.log(data); */
             })
             .catch((err) => console.log(err));
     };

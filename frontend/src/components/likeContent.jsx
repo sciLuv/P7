@@ -6,8 +6,6 @@ function ContentLike(likes) {
     let userLikeArray = authCtx.id;
     const [like, setLike] = useState(likes.likes);
     const [likeNum, setlikeNum] = useState(likes.usersLike.users.includes(userLikeArray));
-    console.log(likeNum);
-    console.log(like);
 
     let liking = async () => {
         const reqOptions = {

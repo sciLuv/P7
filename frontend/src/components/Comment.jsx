@@ -34,14 +34,13 @@ function Comment({
     commentaries,
     setCommentaries,
 }) {
-    console.log('COMMENT');
-    console.log(commentaries);
     const authCtx = useContext(UserAuth);
     let userLikeArray = authCtx.id;
     const [likes, setLikes] = useState(like);
     const [likeNum, setlikeNum] = useState(usersLike.includes(userLikeArray));
     const [isModifOpen, setIsModifOpen] = useState(false);
 
+    console.log('comment');
     let likingComment = () => {
         const reqOptions = {
             method: 'POST',
@@ -73,9 +72,6 @@ function Comment({
                 return res.json();
             })
             .then((data) => {
-                console.log('hello');
-                console.log(commentaries);
-                console.log(data);
                 setCommentaries(data);
             })
             .catch((err) => {
@@ -100,7 +96,6 @@ function Comment({
 
     let uploadComment = async (e) => {
         if (e.key === 'Enter') {
-            console.log(modifText);
             const reqOptions = {
                 method: 'PUT',
                 headers: {
@@ -115,7 +110,6 @@ function Comment({
                     return res.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     setIsModifOpen(false);
                     newComment();
                 })

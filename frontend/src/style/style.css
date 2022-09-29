@@ -17,6 +17,15 @@ textarea {
 }
 
 .avatar-profil-page{
-    max-height: 130px;
-    max-width: 130px;
+    height: 130px;
+    width: 130px;
+}
+.camContainer{
+    position: absolute;
+    left: 140px;
+    top: 85px;
+}
+.cam{
+    width: 30px;
+    height: 30px;
 }

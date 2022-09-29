@@ -16,12 +16,9 @@ const Avatar = styled.img`
 
 function Home() {
     const [contentList, setContentList] = useState([]);
+    const [userInfo, setUserInfo] = useState([]);
     const navigate = useNavigate();
     const authCtx = useContext(UserAuth);
-    console.log(authCtx);
-
-    console.log('contentList');
-    console.log(contentList);
 
     useEffect(() => {
         const reqOptions = {
@@ -40,6 +37,16 @@ function Home() {
             })
             .then((data) => {
                 setContentList(data);
+                fetch('http://localhost:3005/user/' + authCtx.id, reqOptions)
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((data) => {
+                        setUserInfo(data);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             })
             .catch((err) => {
                 console.log(err);
@@ -66,12 +73,11 @@ function Home() {
         };
         fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/', reqOptions)
             .then((res) => {
-                console.log(res);
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
                 setContentList(data);
+                setText('');
             })
             .catch((err) => {
                 console.log(err);
@@ -83,11 +89,7 @@ function Home() {
             {/* ici c'est le form d'ajout de contenu */}
             <div className='container m-2 p-2  col-12 d-flex'>
                 <AvatarImgContainer className='me-2'>
-                    <Avatar
-                        src='http://localhost:3005/images/defaultAvatar.png'
-                        className='img-fluid rounded-circle'
-                        alt=''
-                    />
+                    <Avatar src={userInfo.imgUrl} className='img-fluid rounded-circle' alt='' />
                 </AvatarImgContainer>
                 <form onSubmit={handleSubmit} className='col-11'>
                     <textarea
