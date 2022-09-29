@@ -2,6 +2,7 @@ import '../style/style.css';
 import styled from 'styled-components';
 import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
+import { Link } from 'react-router-dom';
 
 const AvatarImgContainer = styled.div`
     height: 40px;
@@ -124,9 +125,11 @@ function Comment({
 
     return (
         <div className='d-flex m-2'>
-            <AvatarImgContainer className='me-1'>
-                <Avatar src={img} className='img-fluid rounded-circle' alt='' />
-            </AvatarImgContainer>
+            <Link to='/profil'>
+                <AvatarImgContainer className='me-1'>
+                    <Avatar src={img} className='img-fluid rounded-circle' alt='' />
+                </AvatarImgContainer>
+            </Link>
             <div>
                 <div className='d-flex comment'>
                     {isModifOpen === false ? (
@@ -137,9 +140,12 @@ function Comment({
                                 overflowWrap: 'break-word',
                             }}
                         >
-                            <div className='fw-bold'>
-                                {firstname} {lastname}
-                            </div>
+                            <Link to='/profil'>
+                                <div className='fw-bold'>
+                                    {firstname} {lastname}
+                                </div>
+                            </Link>
+
                             <span>{text}</span>
                         </div>
                     ) : null}

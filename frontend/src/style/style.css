@@ -10,3 +10,13 @@
 textarea {
     white-space: pre-wrap;
 }
+
+
+.user-info-profil-page{
+    padding-right: 10px;
+}
+
+.avatar-profil-page{
+    max-height: 130px;
+    max-width: 130px;
+}

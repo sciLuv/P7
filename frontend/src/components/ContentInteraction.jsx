@@ -6,7 +6,7 @@ import { UserAuth } from '../utilis/contextValue.jsx';
 function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const [commentaries, setCommentaries] = useState(comments);
     console.log('_______________');
-    console.log(commentaries);
+    console.log(comments);
     console.log('_______________');
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [newComment, setNewComment] = useState('');
@@ -68,7 +68,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                 <div className='border-top border-danger mt-2 '>
                     {commentaries.map((comment) => (
                         <Comment
-                            key={'comment' + comment.id}
+                            key={'comment ' + comment.id}
                             text={comment.text}
                             id={comment.id}
                             firstname={comment.user.firstname}

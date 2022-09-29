@@ -11,6 +11,7 @@ import passwordSchema from '../models/password.js';//model of password
 import Content from '../models/content.js';//model of content
 import Comment from "../models/comment.js"; //model of comment
 
+import he from "he";
 //to add an user to database. 
 //If email match with model waiting by validator.isEmail, it is crypted by cryptoJS
 //if password match with model waiting by password-validator, it is encrypted by bcrypt
@@ -83,13 +84,14 @@ const login = (req, res) => {
 const profilContent = (req, res) => {
     Content.findAll({
         where : { userId : req.params.id },
+        limit: 10, order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
         include: [{
             model: User,
             attributes: ['firstname', 'lastname', 'imgUrl']
         },
          {
             model: Comment,
-            attributes: ['text', 'usersLike', 'like'],
+            attributes: ['text', 'usersLike', 'like', 'id'],
             include: {
                 model: User,
                 attributes: ['firstname', 'lastname', 'imgUrl']
@@ -97,11 +99,24 @@ const profilContent = (req, res) => {
         }]
     })
     .then(contents => {
-        console.log();
+        console.log(contents);
+        for(const content in contents){
+            contents[content].text = he.decode(contents[content].text);
+            for(const comment in contents[content].comments){
+                contents[content].comments[comment].text = he.decode(contents[content].comments[comment].text);
+            };
+        }
         res.status(200).json(contents)})
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
 }
 
+const getOneUser = (req, res) => {
+    User.findOne({where: {id: req.params.id}, 
+        attributes: ['firstname', 'lastname', 'imgUrl']
+    }) 
+    .then(user =>res.status(200).json(user))
+    .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
+}
 //to modify profil image
 //we create the path of new image, delete the old image from the backend with fs.unlink
 // and add the path of new image to user.imgURL 
@@ -126,4 +141,4 @@ const profilChangeImg = (req, res) => {
 }
 
 //exportation of the before declared functions for add them in the router
-export { signup, login, profilContent, profilChangeImg };
+export { signup, login, profilContent, getOneUser, profilChangeImg };

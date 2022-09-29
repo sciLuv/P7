@@ -3,6 +3,7 @@ import colors from '../utilis/colors.jsx';
 import ContentInteraction from './ContentInteraction.jsx';
 import { useContext, useState } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
+import { Link } from 'react-router-dom';
 
 const ContentContainer = styled.article`
     height: 100%;
@@ -55,8 +56,9 @@ function Content({
     const authCtx = useContext(UserAuth);
     const [modifContentOpen, setModifContentOpen] = useState(false);
 
-    console.log('testouille');
-    console.log(contentList);
+    console.log('---------------CLA-------------------');
+    console.log(contentId);
+    console.log('---------------CLA-------------------');
 
     function newContent() {
         const reqOptions = {
@@ -124,13 +126,17 @@ function Content({
         <ContentContainer className='container m-2 p-2 col-3'>
             <div className='d-flex justify-content-between border-bottom border-danger'>
                 <div className='d-flex'>
-                    <AvatarImgContainer className='me-2'>
-                        <Avatar src={avatar} className='img-fluid rounded-circle' alt='' />
-                    </AvatarImgContainer>
+                    <Link to='/profil'>
+                        <AvatarImgContainer className='me-2'>
+                            <Avatar src={avatar} className='img-fluid rounded-circle' alt='' />
+                        </AvatarImgContainer>
+                    </Link>
                     <div>
-                        <UserName className='d-block fw-bold'>
-                            {firstname} {lastname}
-                        </UserName>
+                        <Link to='/profil'>
+                            <UserName className='d-block fw-bold'>
+                                {firstname} {lastname}
+                            </UserName>
+                        </Link>
                         <ContentDate className='d-block'>{formatedDate}</ContentDate>
                     </div>
                 </div>
