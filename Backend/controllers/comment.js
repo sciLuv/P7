@@ -2,6 +2,7 @@ import Comment from "../models/comment.js"; //model of comment
 import User from '../models/user.js'; //model of user
 import likeFunction from "../utilis/like-function.js"; //function to add like
 import he from "he";
+import {decodeHTMLentitiesComment} from "../utilis/decode-function.js";
 
 //find all the comments in link with one content
 const getContentComment = (req, res) => {
@@ -14,11 +15,7 @@ const getContentComment = (req, res) => {
             }
         })
         .then(comments => { 
-            console.log(comments[0].text);
-            for(const comment in comments){
-                comments[comment].text = he.decode(comments[comment].text);
-            };
-            console.log(comments);
+            decodeHTMLentitiesComment(comments);
             res.status(201).json(comments)
         })
         .catch(error => res.status(400).json({ error } + "Une erreur de transmission de donnée est survenue."));
@@ -41,10 +38,7 @@ const createOneComment = (req, res) => {
                 }
             })
             .then(comments => { 
-                console.log(comments[0].text);
-                for(const comment in comments){
-                    comments[comment].text = he.decode(comments[comment].text);
-                };
+                decodeHTMLentitiesComment(comments);
                 res.status(201).json({comments})
             })
             .catch(error => res.status(400).json({ error } + "Une erreur de transmission de donnée est survenue."));

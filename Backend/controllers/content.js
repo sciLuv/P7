@@ -3,8 +3,7 @@ import fs from 'fs'; // for delete image
 import likeFunction from "../utilis/like-function.js"; //function to add like
 import User from '../models/user.js'; //model of user
 import Comment from "../models/comment.js"; //model of comment
-
-import he from "he";
+import {decodeHTMLentitiesContent} from "../utilis/decode-function.js";
 
 //get infos of all the contents 
 const getAll = (req, res) => {
@@ -26,12 +25,7 @@ const getAll = (req, res) => {
         ]
     })
     .then(contents => {
-        for(const content in contents){
-            contents[content].text = he.decode(contents[content].text);
-            for(const comment in contents[content].comments){
-                contents[content].comments[comment].text = he.decode(contents[content].comments[comment].text);
-            };
-        }
+        decodeHTMLentitiesContent(contents); 
         res.status(200).json(contents);
     })
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
@@ -65,13 +59,7 @@ const createOne = (req, res) => {
             ]
         })
         .then(contents => {
-            for(const content in contents){
-                contents[content].text = he.decode(contents[content].text);
-                for(const comment in contents[content].comments){
-                    contents[content].comments[comment].text = he.decode(contents[content].comments[comment].text);
-                };
-            }
-            console.log(contents);
+            decodeHTMLentitiesContent(contents); 
             res.status(200).json(contents);
         })
         .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));

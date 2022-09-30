@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 
 function ContentLike(likes) {
+    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
     const authCtx = useContext(UserAuth);
     let userLikeArray = authCtx.id;
     const [like, setLike] = useState(likes.likes);
@@ -14,10 +15,7 @@ function ContentLike(likes) {
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch(
-            'http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/' + likes.contentId + '/like',
-            reqOptions
-        )
+        fetch(ApiURL + '/content/' + likes.contentId + '/like', reqOptions)
             .then((res) => res.json())
             .then((data) => {
                 setlikeNum(data.ContentOrComment.usersLike.users.includes(userLikeArray));

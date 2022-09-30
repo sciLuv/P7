@@ -4,7 +4,8 @@ import ContentLike from './likeContent';
 import { UserAuth } from '../utilis/contextValue.jsx';
 
 function ContentInteraction({ likes, comments, contentId, usersLike }) {
-    console.log('contentInteraction');
+    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
+
     const [commentaries, setCommentaries] = useState(comments);
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [newComment, setNewComment] = useState('');
@@ -12,7 +13,6 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const authCtx = useContext(UserAuth);
 
     let handlePressKey = async (e) => {
-        /* e.preventDefault(); */
         if (e.key === 'Enter') {
             const reqOptions = {
                 method: 'POST',
@@ -24,10 +24,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                     text: newComment,
                 }),
             };
-            fetch(
-                'http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/' + contentId + '/comment',
-                reqOptions
-            )
+            fetch(ApiURL + '/' + contentId + '/comment', reqOptions)
                 .then((res) => res.json())
                 .then((data) => {
                     setCommentaries(data.comments);

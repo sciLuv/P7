@@ -11,7 +11,7 @@ import passwordSchema from '../models/password.js';//model of password
 import Content from '../models/content.js';//model of content
 import Comment from "../models/comment.js"; //model of comment
 
-import he from "he";
+import {decodeHTMLentitiesContent} from "../utilis/decode-function.js";
 //to add an user to database. 
 //If email match with model waiting by validator.isEmail, it is crypted by cryptoJS
 //if password match with model waiting by password-validator, it is encrypted by bcrypt
@@ -70,7 +70,8 @@ const login = (req, res) => {
                             process.env.JWT_SENTENCE,
                             { expiresIn: '24h' }
                         ),
-                        userPermission : user.permission
+                        userPermission : user.permission,
+                        imgUrl: user.imgUrl
                     })
                 }
             })
@@ -91,7 +92,7 @@ const profilContent = (req, res) => {
         },
          {
             model: Comment,
-            attributes: ['text', 'usersLike', 'like', 'id'],
+            attributes: ['id','text', 'usersLike', 'like', 'userId', 'contentId'],
             include: {
                 model: User,
                 attributes: ['firstname', 'lastname', 'imgUrl']
@@ -99,14 +100,10 @@ const profilContent = (req, res) => {
         }]
     })
     .then(contents => {
-        console.log(contents);
-        for(const content in contents){
-            contents[content].text = he.decode(contents[content].text);
-            for(const comment in contents[content].comments){
-                contents[content].comments[comment].text = he.decode(contents[content].comments[comment].text);
-            };
+        decodeHTMLentitiesContent(contents);
+        res.status(200).json(contents);
         }
-        res.status(200).json(contents)})
+    )
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
 }
 

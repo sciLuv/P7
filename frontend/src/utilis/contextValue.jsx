@@ -4,9 +4,11 @@ export const UserAuth = createContext({
     token: '',
     userId: '',
     permission: '',
+    img: '',
     setAuth: () => {},
     setId: () => {},
     setPermission: () => {},
+    setImg: () => {},
 });
 
 export const AuthProvider = ({ children }) => {
@@ -22,10 +24,17 @@ export const AuthProvider = ({ children }) => {
     const permHandler = (permission) => {
         setPermission(permission);
     };
+
+    const [imgUrl, setImgUrl] = useState(null);
+    const imgHandler = (imgUrl) => {
+        setImgUrl(imgUrl);
+    };
     const contextValue = {
         token: auth,
         login: loginHandler,
         id: id,
+        img: imgUrl,
+        saveImg: imgHandler,
         saveId: idHandler,
         permission: permission,
         savePermission: permHandler,

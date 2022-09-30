@@ -15,6 +15,7 @@ const Avatar = styled.img`
 `;
 
 function Home() {
+    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
     const [contentList, setContentList] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ function Home() {
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch('http://localhost:3005/', reqOptions)
+        fetch(ApiURL + '/content', reqOptions)
             .then((res) => {
                 if (!res.ok) {
                     navigate('/login');
@@ -37,7 +38,7 @@ function Home() {
             })
             .then((data) => {
                 setContentList(data);
-                fetch('http://localhost:3005/user/' + authCtx.id, reqOptions)
+                fetch(ApiURL + '/user/' + authCtx.id, reqOptions)
                     .then((res) => {
                         return res.json();
                     })
@@ -71,7 +72,7 @@ function Home() {
             },
             body: formData,
         };
-        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/', reqOptions)
+        fetch(ApiURL + '/content', reqOptions)
             .then((res) => {
                 return res.json();
             })

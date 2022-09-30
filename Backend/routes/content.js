@@ -15,15 +15,15 @@ import sanitize from '../middleware/sanitize.js';
 
 
 //GET to get all contents create
-router.get('/', auth, getAll);
+router.get('/content', auth, getAll);
 //POST to create a new content
-router.post('/', auth,  uploadImg, sanitize, createOne);
+router.post('/content', auth,  uploadImg, sanitize, createOne);
 //PUT to upload image or the text of the content, for the creator user and admin
-router.put('/:id', auth, haveRightContent, uploadImg, sanitize, updateOne);
+router.put('/content/:id', auth, haveRightContent, uploadImg, sanitize, updateOne);
 //DELETE the content, for the creator user and admin
-router.delete('/:id', auth, haveRightContent, deleteOne);
+router.delete('/content/:id', auth, haveRightContent, deleteOne);
 //POST to add or remove like to a content
-router.post('/:id/like', auth, like);
+router.post('/content/:id/like', auth, like);
 
 
 //exportation of the routes of contents action to the app.js file

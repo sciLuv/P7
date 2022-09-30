@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 const AvatarImgContainer = styled.div`
     height: 40px;
+    width: 45px;
 `;
 const Avatar = styled.img`
     width: 100%;
@@ -34,6 +35,7 @@ function Comment({
     commentaries,
     setCommentaries,
 }) {
+    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
     const authCtx = useContext(UserAuth);
     let userLikeArray = authCtx.id;
     const [likes, setLikes] = useState(like);
@@ -67,7 +69,7 @@ function Comment({
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch('http://localhost:3005/' + contentId + '/comment', reqOptions)
+        fetch(ApiURL + '/' + contentId + '/comment', reqOptions)
             .then((res) => {
                 return res.json();
             })
@@ -86,7 +88,7 @@ function Comment({
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/comment/' + id, reqOptions)
+        fetch(ApiURL + '/comment/' + id, reqOptions)
             .then((res) => res.json())
             .then(() => newComment())
             .catch((err) => console.log(err));
@@ -105,7 +107,7 @@ function Comment({
                 body: JSON.stringify({ text: modifText }),
             };
 
-            fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/comment/' + id, reqOptions)
+            fetch(ApiURL + '/comment/' + id, reqOptions)
                 .then((res) => {
                     return res.json();
                 })
@@ -119,7 +121,7 @@ function Comment({
 
     return (
         <div className='d-flex m-2'>
-            <Link to='/profil'>
+            <Link to='/profil' state={userId}>
                 <AvatarImgContainer className='me-1'>
                     <Avatar src={img} className='img-fluid rounded-circle' alt='' />
                 </AvatarImgContainer>
@@ -134,7 +136,7 @@ function Comment({
                                 overflowWrap: 'break-word',
                             }}
                         >
-                            <Link to='/profil'>
+                            <Link to='/profil' state={userId}>
                                 <div className='fw-bold'>
                                     {firstname} {lastname}
                                 </div>

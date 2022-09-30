@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 
@@ -15,12 +15,25 @@ const StyledLogo = styled.div`
     margin-left: 5px;
     object-fit: cover;
 `;
+const AvatarImgContainer = styled.div`
+    height: 49px;
+    width: 48px;
+    position: relative;
+    top: -17px;
+`;
+const Avatar = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+`;
 
 function HeaderConnected() {
     /* const isLoginOrSignup = useContext(IsLoginPage); */
     const authCtx = useContext(UserAuth);
     let token = authCtx.token;
-    console.log(token);
+    console.log(window.location.href);
+    const location = useLocation();
+    const idProfil = location.state;
 
     return (
         <StyledHeader className='d-flex justify-content-between'>
@@ -46,14 +59,21 @@ function HeaderConnected() {
                         </>
                     ) : (
                         <>
-                            <li className='nav-item m-2'>
-                                <Link className='nav-link' to='/profil'>
-                                    profil
-                                </Link>
-                            </li>
+                            {console.log('auth' + authCtx.id)}
+                            {console.log('id' + idProfil)}
+                            {idProfil === authCtx.id ? null : (
+                                <li className='nav-item '>
+                                    <Link className='nav-link' to='/profil' state={authCtx.id}>
+                                        <AvatarImgContainer className='me-2'>
+                                            <Avatar src={authCtx.img} className='img-fluid' alt='' />
+                                        </AvatarImgContainer>
+                                    </Link>
+                                </li>
+                            )}
+
                             <li className='nav-item m-2'>
                                 <Link className='nav-link' to='/'>
-                                    parametre
+                                    <i class='fa-solid fa-gear'></i>
                                 </Link>
                             </li>
                         </>

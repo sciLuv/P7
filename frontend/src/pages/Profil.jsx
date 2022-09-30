@@ -3,14 +3,19 @@ import '../style/style.css';
 import styled from 'styled-components';
 import { useState, useEffect, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Content from '../components/Content.jsx';
+import { useLocation } from 'react-router-dom';
 
 const UserInfoContainer = styled.div`
     background-color: ${colors.tertiary};
 `;
 
 function Profil() {
+    const location = useLocation();
+    const idProfil = location.state;
+
+    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
     const navigate = useNavigate();
     const authCtx = useContext(UserAuth);
     const [userContentList, setUserContentList] = useState([]);
@@ -24,7 +29,7 @@ function Profil() {
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch('http://localhost:3005/profil/' + authCtx.id, reqOptions)
+        fetch(ApiURL + '/user/' + idProfil + '/content', reqOptions)
             .then((res) => {
                 if (!res.ok) {
                     navigate('/login');
@@ -34,12 +39,16 @@ function Profil() {
             })
             .then((data) => {
                 setUserContentList(data);
-                fetch('http://localhost:3005/user/' + authCtx.id, reqOptions)
+                fetch(ApiURL + '/user/' + idProfil, reqOptions)
                     .then((res) => {
                         return res.json();
                     })
                     .then((data) => {
                         setUserInfo(data);
+                        console.log(data);
+                        if (idProfil === authCtx.id) {
+                            authCtx.saveImg(data.imgUrl);
+                        }
                     })
                     .catch((err) => {
                         console.log(err);
@@ -48,7 +57,7 @@ function Profil() {
             .catch((err) => {
                 console.log(err);
             });
-    }, [isPhotoUploadOpen]);
+    }, [isPhotoUploadOpen, idProfil]);
 
     const [photoUpload, setPhotoUpload] = useState(null);
 
@@ -64,13 +73,15 @@ function Profil() {
             },
             body: formData,
         };
-        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/profil/' + authCtx.id, reqOptions)
+        fetch(ApiURL + '/user/' + authCtx.id, reqOptions)
             .then((res) => {
                 console.log(res);
                 res.json();
             })
             .then((data) => {
                 setIsPhotoUploadOpen(false);
+                console.log(authCtx);
+                console.log(userInfo.imgUrl);
             })
             .catch((err) => {
                 console.log(err);
@@ -88,14 +99,18 @@ function Profil() {
                         />
                     </div>
                     <div className='camContainer d-flex'>
-                        <div
-                            className='cam border border-danger border-2 d-flex justify-content-center align-items-center rounded-circle bg-light'
-                            onClick={() => {
-                                isPhotoUploadOpen ? setIsPhotoUploadOpen(false) : setIsPhotoUploadOpen(true);
-                            }}
-                        >
-                            <i className='fa-solid fa-camera'></i>
-                        </div>
+                        {authCtx.id === idProfil ? (
+                            <div
+                                className='cam border border-danger border-2 d-flex justify-content-center align-items-center rounded-circle bg-light'
+                                onClick={() => {
+                                    isPhotoUploadOpen
+                                        ? setIsPhotoUploadOpen(false)
+                                        : setIsPhotoUploadOpen(true);
+                                }}
+                            >
+                                <i className='fa-solid fa-camera'></i>
+                            </div>
+                        ) : null}
                         {isPhotoUploadOpen ? (
                             <form
                                 className='d-flex justify-content-between mt-2 ms-5'

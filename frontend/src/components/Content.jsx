@@ -42,7 +42,8 @@ function Content({
     contentList,
     setContentList,
 }) {
-    console.log('content');
+    const apiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
+
     let servDate = date.split('T').join(' ').split('.000Z').join('');
     let time = servDate.split(/[- :]/);
     var formatedTime = new Date(Date.UTC(time[0], time[1] - 1, time[2], time[3], time[4], time[5]));
@@ -65,7 +66,13 @@ function Content({
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch('http://localhost:3005/', reqOptions)
+
+        let URLtocall = apiURL + '/content';
+        if (window.location.href == 'http://localhost:3000/profil') {
+            URLtocall = apiURL + '/user/' + userId + '/content';
+        }
+
+        fetch(URLtocall, reqOptions)
             .then((res) => {
                 return res.json();
             })
@@ -83,7 +90,7 @@ function Content({
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
-        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/' + contentId, reqOptions)
+        fetch(apiURL + '/content/' + contentId, reqOptions)
             .then((res) => res.json())
             .then(() => newContent())
             .catch((err) => console.log(err));
@@ -107,7 +114,7 @@ function Content({
             body: formData,
         };
 
-        fetch('http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/' + contentId, reqOptions)
+        fetch(apiURL + '/content/' + contentId, reqOptions)
             .then((res) => {
                 return res.json();
             })
@@ -121,13 +128,13 @@ function Content({
         <ContentContainer className='container m-2 p-2 col-3'>
             <div className='d-flex justify-content-between border-bottom border-danger'>
                 <div className='d-flex'>
-                    <Link to='/profil'>
+                    <Link to='/profil' state={userId}>
                         <AvatarImgContainer className='me-2'>
                             <Avatar src={avatar} className='img-fluid rounded-circle' alt='' />
                         </AvatarImgContainer>
                     </Link>
                     <div>
-                        <Link to='/profil'>
+                        <Link to='/profil' state={userId}>
                             <UserName className='d-block fw-bold'>
                                 {firstname} {lastname}
                             </UserName>

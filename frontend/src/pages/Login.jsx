@@ -29,6 +29,7 @@ function Login() {
                 authCtx.login(data.token);
                 authCtx.saveId(data.userId);
                 authCtx.savePermission(data.userPermission);
+                authCtx.saveImg(data.imgUrl);
                 console.log(authCtx);
                 navigate('/');
                 /* window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/'); */
