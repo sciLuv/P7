@@ -12,16 +12,30 @@ const UserInfoContainer = styled.div`
 `;
 
 function Profil() {
+    //actual users informations set in react memory, available everywhere in the app.
+    const authCtx = useContext(UserAuth);
+
+    //find value put in the link to the profil page, to select witch user's page to go, with his ID
     const location = useLocation();
     const idProfil = location.state;
 
-    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
-    const navigate = useNavigate();
-    const authCtx = useContext(UserAuth);
-    const [userContentList, setUserContentList] = useState([]);
-    const [userInfo, setUserInfo] = useState([]);
-    const [isPhotoUploadOpen, setIsPhotoUploadOpen] = useState(false);
+    /* if (idProfil == null) {
+        idProfil = authCtx.id;
+    } */
 
+    //allow possibilities to go to another page of the application with link, with no page refreshing
+    const navigate = useNavigate();
+
+    //Base of URL to get path to the API
+    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
+
+    //multiple States
+    const [userContentList, setUserContentList] = useState([]); //array of the user's created content
+    const [userInfo, setUserInfo] = useState([]); //array of the information of the user
+    const [isPhotoUploadOpen, setIsPhotoUploadOpen] = useState(false); // boolean to know if image upload is open
+    const [photoUpload, setPhotoUpload] = useState(null); //to put in the new avator img to upload
+
+    //call to the API to get all users content in the DB, and associate Comments
     useEffect(() => {
         const reqOptions = {
             method: 'GET',
@@ -29,6 +43,7 @@ function Profil() {
                 Authorization: 'Bearer ' + authCtx.token,
             },
         };
+        //call to refesh content
         fetch(ApiURL + '/user/' + idProfil + '/content', reqOptions)
             .then((res) => {
                 if (!res.ok) {
@@ -38,16 +53,19 @@ function Profil() {
                 }
             })
             .then((data) => {
+                //set the contents of the user
                 setUserContentList(data);
+                console.log(data);
+                //call to refesh profil page
                 fetch(ApiURL + '/user/' + idProfil, reqOptions)
                     .then((res) => {
                         return res.json();
                     })
                     .then((data) => {
                         setUserInfo(data);
-                        console.log(data);
                         if (idProfil === authCtx.id) {
                             authCtx.saveImg(data.imgUrl);
+                            console.log('testProfil');
                         }
                     })
                     .catch((err) => {
@@ -58,8 +76,6 @@ function Profil() {
                 console.log(err);
             });
     }, [isPhotoUploadOpen, idProfil]);
-
-    const [photoUpload, setPhotoUpload] = useState(null);
 
     let SubmitNewAvatar = async (e) => {
         let formData = new FormData();
@@ -74,14 +90,10 @@ function Profil() {
             body: formData,
         };
         fetch(ApiURL + '/user/' + authCtx.id, reqOptions)
-            .then((res) => {
-                console.log(res);
-                res.json();
-            })
+            .then((res) => res.json())
             .then((data) => {
                 setIsPhotoUploadOpen(false);
-                console.log(authCtx);
-                console.log(userInfo.imgUrl);
+                console.log('testAvatar');
             })
             .catch((err) => {
                 console.log(err);

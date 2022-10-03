@@ -1,3 +1,4 @@
+import '../style/style.css';
 import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -5,6 +6,19 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordVisibility, setPasswordVisibility] = useState(false);
+
+    let passwordContent = document.getElementById('password');
+
+    function showPassword() {
+        if (passwordVisibility === false) {
+            setPasswordVisibility(true);
+            passwordContent.type = 'text';
+        } else {
+            setPasswordVisibility(false);
+            passwordContent.type = 'password';
+        }
+    }
 
     const authCtx = useContext(UserAuth);
     console.log(authCtx);
@@ -30,7 +44,8 @@ function Login() {
                 authCtx.saveId(data.userId);
                 authCtx.savePermission(data.userPermission);
                 authCtx.saveImg(data.imgUrl);
-                console.log(authCtx);
+                sessionStorage.setItem('token', data.token);
+                sessionStorage.setItem('id', data.userId);
                 navigate('/');
                 /* window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/'); */
             })
@@ -60,17 +75,30 @@ function Login() {
                 <label htmlFor='password' className='form-label mt-3'>
                     Mot de passe
                 </label>
-                <input
-                    type='password'
-                    id='password'
-                    name='user[password]'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className='form-control'
-                    placeholder=''
-                    aria-label='Mot de passe'
-                    aria-describedby='passwordHelpBlock'
-                />
+                <div className='d-flex flex-column'>
+                    <input
+                        type='password'
+                        id='password'
+                        name='user[password]'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className='form-control'
+                        placeholder=''
+                        aria-label='Mot de passe'
+                        aria-describedby='passwordHelpBlock'
+                    />
+                    <i
+                        className={
+                            'far ' +
+                            (passwordVisibility == false ? 'fa-eye-slash ' : 'fa-eye ') +
+                            'align-self-end me-3'
+                        }
+                        id='togglePassword'
+                        onClick={() => {
+                            showPassword();
+                        }}
+                    ></i>
+                </div>
                 <button type='submit' className='btn btn-danger mt-3'>
                     Se connecter
                 </button>

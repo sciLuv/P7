@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Comment from './Comment';
 import ContentLike from './likeContent';
 import { UserAuth } from '../utilis/contextValue.jsx';
@@ -11,6 +11,26 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const [newComment, setNewComment] = useState('');
 
     const authCtx = useContext(UserAuth);
+
+    let addCommentInput = document.getElementById('comment-input');
+
+    useEffect(() => {
+        const reqOptions = {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + authCtx.token,
+            },
+        };
+        fetch(ApiURL + '/' + contentId + '/comment', reqOptions)
+            .then((res) => res.json())
+            .then((data) => {
+                setCommentaries(data);
+                console.log('testComment');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [authCtx.img]);
 
     let handlePressKey = async (e) => {
         if (e.key === 'Enter') {
@@ -29,6 +49,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                 .then((data) => {
                     setCommentaries(data.comments);
                     setNewComment('');
+                    addCommentInput.blur();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -43,6 +64,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
             setIsCommentOpen(false);
         }
     }
+
     return (
         <>
             <div className='d-flex border-top border-danger mt-2 justify-content-between'>
@@ -75,7 +97,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                     <form className='col-12 mt-1' onKeyPress={handlePressKey}>
                         <textarea
                             className='form-control'
-                            id='exampleFormControlTextarea1'
+                            id='comment-input'
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
                             rows='1'

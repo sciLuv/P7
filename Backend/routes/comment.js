@@ -11,7 +11,7 @@ import {haveRightComment} from '../middleware/right.js';
 //middleware to sanitize corpse of comment of his dangerous parts
 import sanitize from '../middleware/sanitize.js';
 
-//permet de chercher les commentaire d'un  contenues
+//permet de chercher les commentaire d'un contenu
 router.get('/:id/comment', auth, getContentComment);
 //crée un commentaire en lien avec un contenue
 router.post('/:id/comment', auth, sanitize, createOneComment);

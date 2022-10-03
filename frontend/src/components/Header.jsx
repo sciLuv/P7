@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 
@@ -27,11 +27,15 @@ const Avatar = styled.img`
     object-fit: cover;
 `;
 
+const DeconnectDropDown = styled.ul`
+    left: -80px !important;
+    cursor: pointer;
+`;
+
 function HeaderConnected() {
-    /* const isLoginOrSignup = useContext(IsLoginPage); */
+    const navigate = useNavigate();
     const authCtx = useContext(UserAuth);
     let token = authCtx.token;
-    console.log(window.location.href);
     const location = useLocation();
     const idProfil = location.state;
 
@@ -59,8 +63,6 @@ function HeaderConnected() {
                         </>
                     ) : (
                         <>
-                            {console.log('auth' + authCtx.id)}
-                            {console.log('id' + idProfil)}
                             {idProfil === authCtx.id ? null : (
                                 <li className='nav-item '>
                                     <Link className='nav-link' to='/profil' state={authCtx.id}>
@@ -71,10 +73,35 @@ function HeaderConnected() {
                                 </li>
                             )}
 
-                            <li className='nav-item m-2'>
-                                <Link className='nav-link' to='/'>
-                                    <i class='fa-solid fa-gear'></i>
-                                </Link>
+                            <li className='nav-item mb-5 me-2'>
+                                <div className='d-flex flex-column'>
+                                    <div
+                                        className='mt-2 me-2'
+                                        type='button'
+                                        data-bs-toggle='dropdown'
+                                        aria-expanded='false'
+                                    >
+                                        <i className='fa-solid fa-arrow-right-from-bracket'></i>
+                                    </div>
+                                    <DeconnectDropDown className='dropdown-menu position-absolute'>
+                                        <li>
+                                            <div
+                                                className='dropdown-item'
+                                                onClick={() => {
+                                                    authCtx.login(null);
+                                                    authCtx.saveId(null);
+                                                    authCtx.savePermission(null);
+                                                    authCtx.saveImg(null);
+                                                    sessionStorage.removeItem('token');
+                                                    sessionStorage.removeItem('id');
+                                                    navigate('/login');
+                                                }}
+                                            >
+                                                déconnexion
+                                            </div>
+                                        </li>
+                                    </DeconnectDropDown>
+                                </div>
                             </li>
                         </>
                     )}

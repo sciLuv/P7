@@ -29,3 +29,11 @@ textarea {
     width: 30px;
     height: 30px;
 }
+
+/* login page */
+
+.fa-eye, .fa-eye-slash{
+    position: relative;
+    top: -25px;
+    cursor: pointer;
+}

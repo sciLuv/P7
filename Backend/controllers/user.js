@@ -109,7 +109,7 @@ const profilContent = (req, res) => {
 
 const getOneUser = (req, res) => {
     User.findOne({where: {id: req.params.id}, 
-        attributes: ['firstname', 'lastname', 'imgUrl']
+        attributes: ['firstname', 'lastname', 'imgUrl', 'permission']
     }) 
     .then(user =>res.status(200).json(user))
     .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));

@@ -8,6 +8,19 @@ function Signup(props) {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
+    const [passwordVisibility, setPasswordVisibility] = useState(false);
+
+    let passwordContent = document.getElementById('password');
+
+    function showPassword() {
+        if (passwordVisibility === false) {
+            setPasswordVisibility(true);
+            passwordContent.type = 'text';
+        } else {
+            setPasswordVisibility(false);
+            passwordContent.type = 'password';
+        }
+    }
     const navigate = useNavigate();
 
     let handleSubmit = async (e) => {
@@ -80,17 +93,31 @@ function Signup(props) {
                 <label htmlFor='password' className='form-label mt-3'>
                     Mot de passe
                 </label>
-                <input
-                    type='password'
-                    id='password'
-                    name='user[password]'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className='form-control'
-                    placeholder=''
-                    aria-label='Mot de passe'
-                    aria-describedby='passwordHelpBlock'
-                />
+
+                <div className='d-flex flex-column'>
+                    <input
+                        type='password'
+                        id='password'
+                        name='user[password]'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className='form-control'
+                        placeholder=''
+                        aria-label='Mot de passe'
+                        aria-describedby='passwordHelpBlock'
+                    />
+                    <i
+                        className={
+                            'far ' +
+                            (passwordVisibility == false ? 'fa-eye-slash ' : 'fa-eye ') +
+                            'align-self-end me-3'
+                        }
+                        id='togglePassword'
+                        onClick={() => {
+                            showPassword();
+                        }}
+                    ></i>
+                </div>
                 <div id='passwordHelpBlock' className='form-text'>
                     Votre mot de passe doit faire 8 caractères, être composé de minuscule, de majuscule, de
                     chiffre et de symbole.

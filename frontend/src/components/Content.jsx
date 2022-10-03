@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import colors from '../utilis/colors.jsx';
 import ContentInteraction from './ContentInteraction.jsx';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import { Link } from 'react-router-dom';
 
@@ -124,6 +124,7 @@ function Content({
             })
             .catch((err) => console.log(err));
     };
+
     return (
         <ContentContainer className='container m-2 p-2 col-3'>
             <div className='d-flex justify-content-between border-bottom border-danger'>

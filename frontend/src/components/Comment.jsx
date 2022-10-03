@@ -42,7 +42,6 @@ function Comment({
     const [likeNum, setlikeNum] = useState(usersLike.includes(userLikeArray));
     const [isModifOpen, setIsModifOpen] = useState(false);
 
-    console.log('comment');
     let likingComment = () => {
         const reqOptions = {
             method: 'POST',
@@ -152,7 +151,9 @@ function Comment({
                                 className='form-control'
                                 id='exampleFormControlTextarea1'
                                 value={modifText}
-                                onChange={(e) => setModifText(e.target.value)}
+                                onChange={(e) => {
+                                    setModifText(e.target.value);
+                                }}
                                 rows='1'
                                 placeholder='donnez votre avis sur cette publication !'
                             ></textarea>{' '}
