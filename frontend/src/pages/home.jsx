@@ -1,9 +1,15 @@
-import { useEffect, useState, useContext } from 'react';
-import Content from '../components/Content.jsx';
+//style relative Import
 import styled from 'styled-components';
+//React and ReactRouter elements's import
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../utilis/contextValue.jsx';
-import Reconnection from '../utilis/reconnection.jsx';
+//function and React component import
+import Content from '../components/Content.jsx';
+import Header from '../components/Header.jsx';
+import userConnect from '../utilis/reconnection.jsx';
+import userInfoSuppr from '../utilis/userInfoSuppr.jsx';
+import options from '../utilis/requestOptions.jsx';
 
 const AvatarImgContainer = styled.div`
     height: 40px;
@@ -22,37 +28,30 @@ function Home() {
     const navigate = useNavigate();
     const authCtx = useContext(UserAuth);
 
+    sessionStorage.removeItem('lastProfilPageId');
+
     useEffect(() => {
-        const reqOptions = {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-        fetch(ApiURL + '/content', reqOptions)
-            .then((res) => {
-                if (!res.ok) {
-                    navigate('/login');
-                } else {
-                    return res.json();
-                }
-            })
-            .then((data) => {
-                setContentList(data);
-                fetch(ApiURL + '/user/' + authCtx.id, reqOptions)
-                    .then((res) => {
+        async function getContent() {
+            fetch(ApiURL + '/content', options(authCtx))
+                .then((res) => {
+                    if (!res.ok) {
+                        userInfoSuppr();
+                    } else {
                         return res.json();
-                    })
-                    .then((data) => {
-                        setUserInfo(data);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                    }
+                })
+                .then((data) => {
+                    setContentList(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        async function main() {
+            await userConnect(authCtx, navigate, ApiURL, setUserInfo);
+            await getContent();
+        }
+        main();
     }, []);
 
     //les constantes liées au form d'ajout de contenu
@@ -60,23 +59,13 @@ function Home() {
     const [file, setFile] = useState(null);
 
     let handleSubmit = async (e) => {
-        let test = { text: text };
         let formData = new FormData();
-        formData.append('content', JSON.stringify(test));
+        formData.append('content', JSON.stringify({ text: text }));
         formData.append('image', file);
 
         e.preventDefault();
-        const reqOptions = {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-            body: formData,
-        };
-        fetch(ApiURL + '/content', reqOptions)
-            .then((res) => {
-                return res.json();
-            })
+        fetch(ApiURL + '/content', options(authCtx, 'POST', formData))
+            .then((res) => res.json())
             .then((data) => {
                 setContentList(data);
                 setText('');
@@ -87,54 +76,56 @@ function Home() {
     };
 
     return (
-        <div className='container'>
-            {/* ici c'est le form d'ajout de contenu */}
-            <div className='container m-2 p-2  col-12 d-flex'>
-                <AvatarImgContainer className='me-2'>
-                    <Avatar src={userInfo.imgUrl} className='img-fluid rounded-circle' alt='' />
-                </AvatarImgContainer>
-                <form onSubmit={handleSubmit} className='col-11'>
-                    <textarea
-                        className='form-control'
-                        id='exampleFormControlTextarea1'
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        rows='1'
-                        placeholder='Quelque chose a partager a vos collegues ?'
-                    ></textarea>
-                    <div className='d-flex justify-content-between mt-2'>
-                        <input
-                            type='file'
-                            onChange={(e) => setFile(e.target.files[0])} /* value={file} */
-                        ></input>
-                        <button type='submit' className='btn btn-primary'>
-                            Publier
-                        </button>
-                    </div>
-                </form>
-            </div>
+        <>
+            <Header />
+            <div className='container'>
+                <div className='container m-2 p-2  col-12 d-flex'>
+                    <AvatarImgContainer className='me-2'>
+                        <Avatar src={userInfo.imgUrl} className='img-fluid rounded-circle' alt='' />
+                    </AvatarImgContainer>
+                    <form onSubmit={handleSubmit} className='col-11'>
+                        <textarea
+                            className='form-control'
+                            id='exampleFormControlTextarea1'
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            rows='1'
+                            placeholder='Quelque chose a partager a vos collegues ?'
+                        ></textarea>
+                        <div className='d-flex justify-content-between mt-2'>
+                            <input
+                                type='file'
+                                onChange={(e) => setFile(e.target.files[0])} /* value={file} */
+                            ></input>
+                            <button type='submit' className='btn btn-primary'>
+                                Publier
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-            <section>
-                {contentList.map((content) => (
-                    <Content
-                        key={content.id}
-                        contentId={content.id}
-                        firstname={content.user.firstname}
-                        lastname={content.user.lastname}
-                        avatar={content.user.imgUrl}
-                        text={content.text}
-                        img={content.imgUrl}
-                        comments={content.comments}
-                        like={content.like}
-                        usersLike={content.usersLike}
-                        date={content.createdAt}
-                        userId={content.userId}
-                        contentList={contentList}
-                        setContentList={setContentList}
-                    />
-                ))}
-            </section>
-        </div>
+                <section>
+                    {contentList.map((content) => (
+                        <Content
+                            key={content.id}
+                            contentId={content.id}
+                            firstname={content.user.firstname}
+                            lastname={content.user.lastname}
+                            avatar={content.user.imgUrl}
+                            text={content.text}
+                            img={content.imgUrl}
+                            comments={content.comments}
+                            like={content.like}
+                            usersLike={content.usersLike}
+                            date={content.createdAt}
+                            userId={content.userId}
+                            contentList={contentList}
+                            setContentList={setContentList}
+                        />
+                    ))}
+                </section>
+            </div>
+        </>
     );
 }
 

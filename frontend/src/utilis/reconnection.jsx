@@ -1,38 +1,43 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserAuth } from '../utilis/contextValue.jsx';
+import userInfoSuppr from './userInfoSuppr.jsx';
 
-function Reconnection() {
-    const navigate = useNavigate();
-    const authCtx = useContext(UserAuth);
-    if (authCtx.token == undefined || authCtx.token == null) {
-        const reqOptions = {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-            },
-        };
-        fetch(
-            'http://localhost:' +
-                process.env.REACT_APP_BACKEND_PORT +
-                '/user/' +
-                sessionStorage.getItem('id'),
-            reqOptions
-        )
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('data');
-                console.log(data);
-                authCtx.login(sessionStorage.getItem('token'));
-                authCtx.saveId(sessionStorage.getItem('id'));
-                authCtx.savePermission(data.permission);
-                authCtx.saveImg(data.imgUrl);
-            })
-            .catch((err) => {
-                console.log(err);
-                navigate('/login');
-            });
+async function userConnect(authCtx, navigate, ApiURL, setUserInfo) {
+    console.log('--------userConnect Profil---------');
+    console.log(authCtx);
+    let storageOrStateToken, storageOrStateId;
+    if (!authCtx.token) {
+        if (!sessionStorage.getItem('token')) {
+            userInfoSuppr();
+        } else {
+            storageOrStateToken = sessionStorage.getItem('token');
+            storageOrStateId = sessionStorage.getItem('id');
+        }
+    } else {
+        storageOrStateToken = authCtx.token;
+        storageOrStateId = authCtx.id;
     }
+    const reqOptions = {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer ' + storageOrStateToken,
+        },
+    };
+    await fetch(ApiURL + '/user/' + storageOrStateId, reqOptions)
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            setUserInfo(data);
+            if (authCtx.token == null) {
+                authCtx.token = sessionStorage.getItem('token');
+                authCtx.id = Number(sessionStorage.getItem('id'));
+                authCtx.permission = data.permission;
+                authCtx.img = data.imgUrl;
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            navigate('/login');
+        });
 }
 
-export default Reconnection;
+export default userConnect;

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
+import userInfoSuppr from '../utilis/userInfoSuppr';
 
 const StyledHeader = styled.header`
     height: 50px;
@@ -32,10 +33,8 @@ const DeconnectDropDown = styled.ul`
     cursor: pointer;
 `;
 
-function HeaderConnected() {
-    const navigate = useNavigate();
+function Header() {
     const authCtx = useContext(UserAuth);
-    let token = authCtx.token;
     const location = useLocation();
     const idProfil = location.state;
 
@@ -48,7 +47,7 @@ function HeaderConnected() {
             </Link>
             <nav className='navbar'>
                 <ul className='navbar-nav d-flex flex-row'>
-                    {token === null ? (
+                    {authCtx.token === null ? (
                         <>
                             <li className='nav-item m-2'>
                                 <Link className='nav-link' to='/signup'>
@@ -88,13 +87,7 @@ function HeaderConnected() {
                                             <div
                                                 className='dropdown-item'
                                                 onClick={() => {
-                                                    authCtx.login(null);
-                                                    authCtx.saveId(null);
-                                                    authCtx.savePermission(null);
-                                                    authCtx.saveImg(null);
-                                                    sessionStorage.removeItem('token');
-                                                    sessionStorage.removeItem('id');
-                                                    navigate('/login');
+                                                    userInfoSuppr();
                                                 }}
                                             >
                                                 déconnexion
@@ -110,4 +103,4 @@ function HeaderConnected() {
         </StyledHeader>
     );
 }
-export default HeaderConnected;
+export default Header;

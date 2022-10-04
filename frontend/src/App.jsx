@@ -1,6 +1,5 @@
 import Signup from './pages/Signup.jsx';
 import Login from './pages/Login.jsx';
-import Header from './components/Header.jsx';
 import { BrowserRouter, Route, Routes /* Link, useParams  */ } from 'react-router-dom';
 import Home from './pages/home.jsx';
 import Profil from './pages/Profil.jsx';
@@ -14,7 +13,6 @@ function App() {
     return (
         <div>
             <BrowserRouter>
-                <Header />
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/profil' element={<Profil />} />

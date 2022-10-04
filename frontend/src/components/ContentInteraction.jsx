@@ -25,7 +25,6 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
             .then((res) => res.json())
             .then((data) => {
                 setCommentaries(data);
-                console.log('testComment');
             })
             .catch((err) => {
                 console.log(err);
