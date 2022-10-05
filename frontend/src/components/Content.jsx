@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import colors from '../utilis/colors.jsx';
 import ContentInteraction from './ContentInteraction.jsx';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import { Link } from 'react-router-dom';
+import options from '../utilis/requestOptions.jsx';
+import whiteSpaceVerification from '../utilis/formStringValidation.jsx';
 
 const ContentContainer = styled.article`
     height: 100%;
@@ -47,32 +49,26 @@ function Content({
     let servDate = date.split('T').join(' ').split('.000Z').join('');
     let time = servDate.split(/[- :]/);
     var formatedTime = new Date(Date.UTC(time[0], time[1] - 1, time[2], time[3], time[4], time[5]));
-    const options = {
+    const optionsDate = {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
     };
-    let formatedDate = formatedTime.toLocaleDateString(process.env.REACT_APP_LOCAL_DATE, options);
+    let formatedDate = formatedTime.toLocaleDateString(process.env.REACT_APP_LOCAL_DATE, optionsDate);
 
     const authCtx = useContext(UserAuth);
     const [modifContentOpen, setModifContentOpen] = useState(false);
+    const [modifText, setModifText] = useState(text);
+    const [modifFile, setModifFile] = useState();
 
     function newContent() {
-        const reqOptions = {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-
         let URLtocall = apiURL + '/content';
         if (window.location.href == 'http://localhost:3000/profil') {
             URLtocall = apiURL + '/user/' + userId + '/content';
         }
-
-        fetch(URLtocall, reqOptions)
+        fetch(URLtocall, options(authCtx))
             .then((res) => {
                 return res.json();
             })
@@ -83,46 +79,32 @@ function Content({
                 console.log(err);
             });
     }
+
     let deleteContent = async () => {
-        const reqOptions = {
-            method: 'DELETE',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-        fetch(apiURL + '/content/' + contentId, reqOptions)
+        fetch(apiURL + '/content/' + contentId, options(authCtx, 'DELETE'))
             .then((res) => res.json())
             .then(() => newContent())
             .catch((err) => console.log(err));
     };
 
-    const [modifText, setModifText] = useState(text);
-    const [modifFile, setModifFile] = useState();
-
     let uploadContent = async (e) => {
-        let formText = { text: modifText };
-        let formData = new FormData();
-        formData.append('content', JSON.stringify(formText));
-        formData.append('image', modifFile);
+        let modifTextIsCorrect = whiteSpaceVerification(modifText);
+        if ((modifTextIsCorrect == true && modifFile == null) || modifFile != null) {
+            let formData = new FormData();
+            formData.append('content', JSON.stringify({ text: modifText }));
+            formData.append('image', modifFile);
 
-        e.preventDefault();
-        const reqOptions = {
-            method: 'PUT',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-            body: formData,
-        };
-
-        fetch(apiURL + '/content/' + contentId, reqOptions)
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                newContent();
-                setModifContentOpen(false);
-            })
-            .catch((err) => console.log(err));
+            e.preventDefault();
+            fetch(apiURL + '/content/' + contentId, options(authCtx, 'PUT', formData))
+                .then((res) => {
+                    return res.json();
+                })
+                .then((data) => {
+                    newContent();
+                    setModifContentOpen(false);
+                })
+                .catch((err) => console.log(err));
+        }
     };
 
     return (

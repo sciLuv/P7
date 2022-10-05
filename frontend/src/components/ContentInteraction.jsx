@@ -2,51 +2,38 @@ import { useState, useContext, useEffect } from 'react';
 import Comment from './Comment';
 import ContentLike from './likeContent';
 import { UserAuth } from '../utilis/contextValue.jsx';
+import options from '../utilis/requestOptions.jsx';
+import whiteSpaceVerification from '../utilis/formStringValidation';
 
 function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
 
-    const [commentaries, setCommentaries] = useState(comments);
+    const [commentaries, setCommentaries] = useState([]);
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [newComment, setNewComment] = useState('');
+    //to
+    const [commentNum, setCommentNum] = useState(comments.length);
 
     const authCtx = useContext(UserAuth);
 
     let addCommentInput = document.getElementById('comment-input');
 
     useEffect(() => {
-        const reqOptions = {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-        fetch(ApiURL + '/' + contentId + '/comment', reqOptions)
-            .then((res) => res.json())
-            .then((data) => {
-                setCommentaries(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        setIsCommentOpen(false);
     }, [authCtx.img]);
 
     let handlePressKey = async (e) => {
-        if (e.key === 'Enter') {
-            const reqOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + authCtx.token,
-                },
-                body: JSON.stringify({
-                    text: newComment,
-                }),
-            };
-            fetch(ApiURL + '/' + contentId + '/comment', reqOptions)
+        let newCommentIsCorrect = whiteSpaceVerification(newComment);
+        //if the user push enter key, dont push shift key and if the string have not only whitespace and linebreak
+        if (e.key === 'Enter' && newCommentIsCorrect == true && e.shiftKey == false) {
+            let body = JSON.stringify({
+                text: newComment,
+            });
+            fetch(ApiURL + '/' + contentId + '/comment', options(authCtx, 'POST', body, 'application/json'))
                 .then((res) => res.json())
                 .then((data) => {
                     setCommentaries(data.comments);
+                    setCommentNum(data.comments.length);
                     setNewComment('');
                     addCommentInput.blur();
                 })
@@ -59,6 +46,15 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
     function openComment() {
         if (isCommentOpen === false) {
             setIsCommentOpen(true);
+            fetch(ApiURL + '/' + contentId + '/comment', options(authCtx))
+                .then((res) => res.json())
+                .then((data) => {
+                    setCommentaries(data);
+                    console.log(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         } else {
             setIsCommentOpen(false);
         }
@@ -71,7 +67,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
 
                 <div onClick={openComment}>
                     <i className='fa-regular fa-comment me-1'></i>
-                    {comments.length} commentaire(s)
+                    {commentNum} commentaire(s)
                 </div>
             </div>
             {isCommentOpen ? (

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import { Link } from 'react-router-dom';
+import options from '../utilis/requestOptions.jsx';
+import whiteSpaceVerification from '../utilis/formStringValidation';
 
 const AvatarImgContainer = styled.div`
     height: 40px;
@@ -43,15 +45,9 @@ function Comment({
     const [isModifOpen, setIsModifOpen] = useState(false);
 
     let likingComment = () => {
-        const reqOptions = {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
         fetch(
             'http://localhost:' + process.env.REACT_APP_BACKEND_PORT + '/comment/' + id + '/like',
-            reqOptions
+            options(authCtx, 'POST')
         )
             .then((res) => res.json())
             .then((data) => {
@@ -62,13 +58,7 @@ function Comment({
     };
 
     function newComment() {
-        const reqOptions = {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-        fetch(ApiURL + '/' + contentId + '/comment', reqOptions)
+        fetch(ApiURL + '/' + contentId + '/comment', options(authCtx))
             .then((res) => {
                 return res.json();
             })
@@ -81,13 +71,7 @@ function Comment({
     }
 
     let deleteComment = async () => {
-        const reqOptions = {
-            method: 'DELETE',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-        fetch(ApiURL + '/comment/' + id, reqOptions)
+        fetch(ApiURL + '/comment/' + id, options(authCtx, 'DELETE'))
             .then((res) => res.json())
             .then(() => newComment())
             .catch((err) => console.log(err));
@@ -96,17 +80,11 @@ function Comment({
     const [modifText, setModifText] = useState(text);
 
     let uploadComment = async (e) => {
-        if (e.key === 'Enter') {
-            const reqOptions = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + authCtx.token,
-                },
-                body: JSON.stringify({ text: modifText }),
-            };
-
-            fetch(ApiURL + '/comment/' + id, reqOptions)
+        let modifTextIsCorrect = whiteSpaceVerification(modifText);
+        //if the user push enter key, dont push shift key and if the string have not only whitespace and linebreak
+        if (e.key === 'Enter' && modifTextIsCorrect == true && e.shiftKey == false) {
+            let body = JSON.stringify({ text: modifText });
+            fetch(ApiURL + '/comment/' + id, options(authCtx, 'PUT', body, 'application/json'))
                 .then((res) => {
                     return res.json();
                 })
@@ -159,7 +137,7 @@ function Comment({
                             ></textarea>{' '}
                         </form>
                     ) : null}
-                    {likes <= 0 ? null : (
+                    {likes <= 0 || isModifOpen === true ? null : (
                         <LikeContainer className='border rounded-pill p-1'>
                             <i
                                 className={
@@ -200,9 +178,15 @@ function Comment({
                         </div>
                     ) : null}
                 </div>
-                <div className='ms-2' onClick={() => likingComment()}>
-                    j'aime
-                </div>
+                {isModifOpen === true ? (
+                    <div className='ms-2' onClick={() => setIsModifOpen(false)}>
+                        annuler
+                    </div>
+                ) : (
+                    <div className='ms-2' onClick={() => likingComment()}>
+                        j'aime
+                    </div>
+                )}
             </div>
         </div>
     );

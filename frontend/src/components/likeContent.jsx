@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
+import options from '../utilis/requestOptions.jsx';
 
 function ContentLike(likes) {
     const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
@@ -9,13 +10,7 @@ function ContentLike(likes) {
     const [likeNum, setlikeNum] = useState(likes.usersLike.users.includes(userLikeArray));
 
     let liking = async () => {
-        const reqOptions = {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer ' + authCtx.token,
-            },
-        };
-        fetch(ApiURL + '/content/' + likes.contentId + '/like', reqOptions)
+        fetch(ApiURL + '/content/' + likes.contentId + '/like', options(authCtx, 'POST'))
             .then((res) => res.json())
             .then((data) => {
                 setlikeNum(data.ContentOrComment.usersLike.users.includes(userLikeArray));

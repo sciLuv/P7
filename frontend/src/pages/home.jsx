@@ -10,6 +10,7 @@ import Header from '../components/Header.jsx';
 import userConnect from '../utilis/reconnection.jsx';
 import userInfoSuppr from '../utilis/userInfoSuppr.jsx';
 import options from '../utilis/requestOptions.jsx';
+import whiteSpaceVerification from '../utilis/formStringValidation.jsx';
 
 const AvatarImgContainer = styled.div`
     height: 40px;
@@ -41,6 +42,7 @@ function Home() {
                     }
                 })
                 .then((data) => {
+                    console.log(data);
                     setContentList(data);
                 })
                 .catch((err) => {
@@ -59,20 +61,23 @@ function Home() {
     const [file, setFile] = useState(null);
 
     let handleSubmit = async (e) => {
-        let formData = new FormData();
-        formData.append('content', JSON.stringify({ text: text }));
-        formData.append('image', file);
+        let newTextIsCorrect = whiteSpaceVerification(text);
+        if ((newTextIsCorrect == true && file == null) || file != null) {
+            let formData = new FormData();
+            formData.append('content', JSON.stringify({ text: text }));
+            formData.append('image', file);
 
-        e.preventDefault();
-        fetch(ApiURL + '/content', options(authCtx, 'POST', formData))
-            .then((res) => res.json())
-            .then((data) => {
-                setContentList(data);
-                setText('');
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            e.preventDefault();
+            fetch(ApiURL + '/content', options(authCtx, 'POST', formData))
+                .then((res) => res.json())
+                .then((data) => {
+                    setContentList(data);
+                    setText('');
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     };
 
     return (
