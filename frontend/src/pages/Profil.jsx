@@ -15,6 +15,89 @@ import options from '../utilis/requestOptions.jsx';
 
 const UserInfoContainer = styled.div`
     background-color: ${colors.tertiary};
+    background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 60%,
+        rgba(0, 0, 0, 0.1516981792717087) 90%
+    );
+`;
+const AvatarImgContainer = styled.div`
+    height: 168px;
+    width: 168px;
+`;
+const Avatar = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+`;
+const CamContainer = styled.div`
+    position: absolute;
+    left: 148px;
+    top: 200px;
+    user-select: none;
+`;
+
+const Cam = styled.div`
+    width: 30px;
+    height: 30px;
+    &::before {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        content: '';
+        border-radius: 40px;
+        opacity: 1;
+        background: linear-gradient(158deg, #ffffff43 32%, #000000bd 100%);
+        transition: 0.2s;
+    }
+    &::after {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        content: '';
+        border-radius: 40px;
+        opacity: 0;
+        background: linear-gradient(140deg, #ffffff43 32%, #000000bd 100%);
+        transition: 0.2s;
+    }
+    &:hover {
+        cursor: pointer;
+        font-size: 17px;
+        transition: 0.1s;
+        &::after {
+            opacity: 1;
+            transition: 0.2s;
+        }
+        &::before {
+            opacity: 0;
+            transition: 0.2s;
+        }
+    }
+    background-color: ${(props) => (props.open ? '#131313' : '#fff')};
+    color: ${(props) => (props.open ? '#fff' : '#262626')}; ;
+`;
+
+const FormAvatar = styled.form`
+    position: absolute;
+    top: -120px;
+    @media (max-width: 576px) {
+        width: 150px;
+        & button,
+        input {
+            width: 100px;
+            font-size: 12px;
+        }
+    }
+`;
+
+const UserNameContainer = styled.div`
+    color: #e92700;
+    @media (max-width: 576px) {
+        font-size: 24px !important;
+        margin-right: 30px !important;
+        position: relative;
+        top: ${(props) => (props.open ? '50px' : '0px')};
+    }
 `;
 
 function Profil() {
@@ -103,17 +186,14 @@ function Profil() {
             <div className='profil-page-container'>
                 <UserInfoContainer className=' d-flex align-items-center justify-content-between'>
                     <div>
-                        <div className='p-4'>
-                            <img
-                                src={userInfo.imgUrl}
-                                className='img-fluid rounded-circle avatar-profil-page'
-                                alt=''
-                            />
-                        </div>
-                        <div className='camContainer d-flex'>
+                        <AvatarImgContainer className='m-3'>
+                            <Avatar src={userInfo.imgUrl} className='img-fluid rounded-circle' alt='' />
+                        </AvatarImgContainer>
+                        <CamContainer>
                             {authCtx.id === idProfil ? (
-                                <div
-                                    className='cam border border-danger border-2 d-flex justify-content-center align-items-center rounded-circle bg-light'
+                                <Cam
+                                    className='d-flex justify-content-center align-items-center rounded-circle'
+                                    open={isPhotoUploadOpen}
                                     onClick={() => {
                                         isPhotoUploadOpen
                                             ? setIsPhotoUploadOpen(false)
@@ -121,28 +201,28 @@ function Profil() {
                                     }}
                                 >
                                     <i className='fa-solid fa-camera'></i>
-                                </div>
+                                </Cam>
                             ) : null}
                             {isPhotoUploadOpen ? (
-                                <form
-                                    className='d-flex justify-content-between mt-2 ms-5'
+                                <FormAvatar
+                                    className='d-flex flex-column mt-2 ms-5'
                                     onSubmit={SubmitNewAvatar}
                                 >
                                     <input
                                         type='file'
                                         onChange={(e) => setPhotoUpload(e.target.files[0])}
                                     ></input>
-                                    <button type='submit' className='btn btn-primary'>
-                                        Changer de photo de profil
+                                    <button type='submit' className='btn btn-danger align-self-start mt-3'>
+                                        Changer de photo
                                     </button>
-                                </form>
+                                </FormAvatar>
                             ) : null}
-                        </div>
+                        </CamContainer>
                     </div>
-                    <div className='mt-3 me-5 text-danger fs-3'>
+                    <UserNameContainer className='mt-3 me-5 fs-1' open={isPhotoUploadOpen}>
                         <span>{userInfo.lastname} </span>
                         <span>{userInfo.firstname}</span>
-                    </div>
+                    </UserNameContainer>
                 </UserInfoContainer>
                 <div className='container'>
                     {userContentList.map((content) => (

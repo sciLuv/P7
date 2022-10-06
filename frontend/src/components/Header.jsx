@@ -1,24 +1,41 @@
 import styled from 'styled-components';
-import Logo from '../assets/logo.svg';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.svg';
+import logoName from '../assets/logoName.svg';
+import { Link, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import userInfoSuppr from '../utilis/userInfoSuppr';
 
 const StyledHeader = styled.header`
-    height: 50px;
+    position: sticky;
+    z-index: 10;
+    top: 0px;
+    height: 60px;
     width: 100%;
-    border-bottom: solid #fd2d01 2px;
+    padding: 5px 0px;
+    background-color: white;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 30%, rgba(255, 0, 0, 0.07) 100%);
 `;
 const StyledLogo = styled.div`
+    display: flex;
     height: 100%;
     width: 250px;
-    margin-left: 5px;
+    margin-left: 8px;
     object-fit: cover;
+    @media (max-width: 576px) {
+        width: 43px;
+    }
+`;
+const LogoNameContain = styled.img`
+    @media (max-width: 576px) {
+        height: 0px;
+        width: 0px;
+    }
 `;
 const AvatarImgContainer = styled.div`
-    height: 49px;
-    width: 48px;
+    height: 60px;
+    width: 60px;
+    margin-top: -5px;
     position: relative;
     top: -17px;
 `;
@@ -29,8 +46,9 @@ const Avatar = styled.img`
 `;
 
 const DeconnectDropDown = styled.ul`
-    left: -80px !important;
+    left: -135px !important;
     cursor: pointer;
+    user-select: none;
 `;
 
 function Header() {
@@ -42,7 +60,8 @@ function Header() {
         <StyledHeader className='d-flex justify-content-between'>
             <Link to='/'>
                 <StyledLogo>
-                    <img src={Logo} alt='logo de groupomania' />
+                    <img src={logo} alt='logo de groupomania' />
+                    <LogoNameContain src={logoName} alt='logo de groupomania' />
                 </StyledLogo>
             </Link>
             <nav className='navbar'>
@@ -66,7 +85,11 @@ function Header() {
                                 <li className='nav-item '>
                                     <Link className='nav-link' to='/profil' state={authCtx.id}>
                                         <AvatarImgContainer className='me-2'>
-                                            <Avatar src={authCtx.img} className='img-fluid' alt='' />
+                                            <Avatar
+                                                src={authCtx.img}
+                                                className='img-fluid rounded-circle'
+                                                alt=''
+                                            />
                                         </AvatarImgContainer>
                                     </Link>
                                 </li>
@@ -75,7 +98,7 @@ function Header() {
                             <li className='nav-item mb-5 me-2'>
                                 <div className='d-flex flex-column'>
                                     <div
-                                        className='mt-2 me-2'
+                                        className='mt-2'
                                         type='button'
                                         data-bs-toggle='dropdown'
                                         aria-expanded='false'

@@ -14,7 +14,7 @@ const ContentContainer = styled.article`
     border-radius: 5px;
 `;
 const AvatarImgContainer = styled.div`
-    height: 40px;
+    height: 45px;
     width: 45px;
 `;
 const Avatar = styled.img`
@@ -109,7 +109,7 @@ function Content({
 
     return (
         <ContentContainer className='container m-2 p-2 col-3'>
-            <div className='d-flex justify-content-between border-bottom border-danger'>
+            <div className='d-flex justify-content-between border-bottom border-danger pb-1'>
                 <div className='d-flex'>
                     <Link to='/profil' state={userId}>
                         <AvatarImgContainer className='me-2'>
