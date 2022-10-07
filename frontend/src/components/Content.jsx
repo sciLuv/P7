@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import imgRegular from '../assets/image-regular.svg';
 import colors from '../utilis/colors.jsx';
 import ContentInteraction from './ContentInteraction.jsx';
 import { useContext, useState } from 'react';
@@ -60,6 +61,25 @@ const TextContent = styled.p`
     overflow-wrap: break-word;
     margin-left: 5px;
 `;
+const InputFile = styled.input`
+    margin-left: 5px;
+    &::file-selector-button {
+        width: 30px !important;
+        height: 30px !important;
+        opacity: 0;
+    }
+    &::before {
+        width: 30px !important;
+        height: 30px !important;
+        content: '';
+        position: absolute;
+        z-index: 5;
+        border-radius: 5px;
+        opacity: ${(props) => (props.isfile ? 1 : 0.2)};
+        background: url(${imgRegular});
+        cursor: pointer;
+    }
+`;
 
 function Content({
     firstname,
@@ -93,9 +113,8 @@ function Content({
     const authCtx = useContext(UserAuth);
     const [modifContentOpen, setModifContentOpen] = useState(false);
     const [modifText, setModifText] = useState(text);
-    const [modifFile, setModifFile] = useState();
+    const [modifFile, setModifFile] = useState(null);
 
-    console.log(text);
     function newContent() {
         let URLtocall = apiURL + '/content';
         if (window.location.href == 'http://localhost:3000/profil') {
@@ -200,7 +219,11 @@ function Content({
                         placeholder='Quelque chose a partager a vos collegues ?'
                     ></textarea>
                     <div className='d-flex justify-content-between mt-2'>
-                        <input type='file' onChange={(e) => setModifFile(e.target.files[0])}></input>
+                        <InputFile
+                            type='file'
+                            isfile={modifFile === null ? false : true}
+                            onChange={(e) => setModifFile(e.target.files[0])}
+                        ></InputFile>
                         <button type='submit' className='btn btn-danger mb-2'>
                             Enregistrer
                         </button>

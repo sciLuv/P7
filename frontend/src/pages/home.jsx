@@ -1,5 +1,6 @@
 //style relative Import
 import styled from 'styled-components';
+import imgRegular from '../assets/image-regular.svg';
 //React and ReactRouter elements's import
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +27,26 @@ const Avatar = styled.img`
 const ContentContainer = styled.div`
     @media (max-width: 576px) {
         margin-left: -7px;
+    }
+`;
+
+const InputFile = styled.input`
+    margin-left: 5px;
+    &::file-selector-button {
+        width: 30px !important;
+        height: 30px !important;
+        opacity: 0;
+    }
+    &::before {
+        width: 30px !important;
+        height: 30px !important;
+        content: '';
+        position: absolute;
+        z-index: 5;
+        border-radius: 5px;
+        opacity: ${(props) => (props.isfile ? 1 : 0.2)};
+        background: url(${imgRegular});
+        cursor: pointer;
     }
 `;
 
@@ -79,6 +100,7 @@ function Home() {
                 .then((res) => res.json())
                 .then((data) => {
                     setContentList(data);
+                    setFile(null);
                     setText('');
                 })
                 .catch((err) => {
@@ -105,10 +127,14 @@ function Home() {
                             placeholder='Quelque chose a partager a vos collegues ?'
                         ></textarea>
                         <div className='d-flex justify-content-between mt-2'>
-                            <input
+                            <InputFile
                                 type='file'
-                                onChange={(e) => setFile(e.target.files[0])} /* value={file} */
-                            ></input>
+                                isfile={file === null ? false : true}
+                                onChange={(e) => {
+                                    setFile(e.target.files[0]);
+                                    console.log(file);
+                                }}
+                            ></InputFile>
                             <button type='submit' className='btn btn-danger'>
                                 Publier
                             </button>
