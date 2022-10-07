@@ -17,11 +17,19 @@ const Avatar = styled.img`
 `;
 const LikeContainer = styled.div`
     display: inline;
-    height: 35px;
+    height: 24px;
     position: relative;
     left: -3px;
-    background: #ffffff;
+    background: #f2f2f2;
     align-self: end;
+    white-space: nowrap;
+    & i {
+        background-color: #ffd7d7;
+        color: #fd2d01;
+    }
+`;
+const CommentText = styled.div`
+    background: #eaeaea;
 `;
 
 function Comment({
@@ -36,6 +44,8 @@ function Comment({
     contentId,
     commentaries,
     setCommentaries,
+    setCommentNum,
+    commentNum,
 }) {
     const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
     const authCtx = useContext(UserAuth);
@@ -64,6 +74,7 @@ function Comment({
             })
             .then((data) => {
                 setCommentaries(data);
+                setCommentNum(data.length);
             })
             .catch((err) => {
                 console.log(err);
@@ -73,7 +84,9 @@ function Comment({
     let deleteComment = async () => {
         fetch(ApiURL + '/comment/' + id, options(authCtx, 'DELETE'))
             .then((res) => res.json())
-            .then(() => newComment())
+            .then(() => {
+                newComment();
+            })
             .catch((err) => console.log(err));
     };
 
@@ -106,8 +119,8 @@ function Comment({
             <div>
                 <div className='d-flex comment'>
                     {isModifOpen === false ? (
-                        <div
-                            className=' border ms-2 p-1 rounded'
+                        <CommentText
+                            className='ms-2 p-1 rounded'
                             style={{
                                 whiteSpace: 'pre-wrap',
                                 overflowWrap: 'break-word',
@@ -120,7 +133,7 @@ function Comment({
                             </Link>
 
                             <span>{text}</span>
-                        </div>
+                        </CommentText>
                     ) : null}
 
                     {isModifOpen === true ? (
@@ -138,10 +151,11 @@ function Comment({
                         </form>
                     ) : null}
                     {likes <= 0 || isModifOpen === true ? null : (
-                        <LikeContainer className='border rounded-pill p-1'>
+                        <LikeContainer className='rounded-pill'>
                             <i
                                 className={
-                                    (likeNum === true ? 'fa-solid ' : 'fa-regular ') + 'fa-thumbs-up me-1'
+                                    (likeNum === true ? 'fa-solid ' : 'fa-regular ') +
+                                    'fa-thumbs-up me-1 rounded-pill p-1'
                                 }
                             ></i>
                             <span className='me-1'>{likes}</span>
@@ -159,14 +173,17 @@ function Comment({
                             </div>
                             <ul className='dropdown-menu'>
                                 <li>
-                                    <div className='dropdown-item' onClick={() => setIsModifOpen(true)}>
+                                    <div
+                                        className='dropdown-item hover-item'
+                                        onClick={() => setIsModifOpen(true)}
+                                    >
                                         modifier
                                     </div>
                                 </li>
                                 <hr />
                                 <li>
                                     <div
-                                        className='dropdown-item'
+                                        className='dropdown-item hover-item'
                                         onClick={() => {
                                             deleteComment();
                                         }}
@@ -179,11 +196,11 @@ function Comment({
                     ) : null}
                 </div>
                 {isModifOpen === true ? (
-                    <div className='ms-2' onClick={() => setIsModifOpen(false)}>
+                    <div className='ms-2 hover-item' onClick={() => setIsModifOpen(false)}>
                         annuler
                     </div>
                 ) : (
-                    <div className='ms-2' onClick={() => likingComment()}>
+                    <div className='ms-2 hover-item' onClick={() => likingComment()}>
                         j'aime
                     </div>
                 )}

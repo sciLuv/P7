@@ -10,7 +10,6 @@ import whiteSpaceVerification from '../utilis/formStringValidation.jsx';
 const ContentContainer = styled.article`
     height: 100%;
     width: 100%;
-    border: solid ${colors.primary} 2px;
     border-radius: 5px;
 `;
 const AvatarImgContainer = styled.div`
@@ -27,6 +26,39 @@ const UserName = styled.span`
 `;
 const ContentDate = styled.span`
     font-size: 12px;
+`;
+
+const ContentTextandImg = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`;
+const ImgContent = styled.div`
+    display: flex;
+    width: 100%;
+    & div {
+        width: 100%;
+        height: height;
+    }
+    & .left-size {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 40%, #4e516617 100%);
+    }
+    & .right-size {
+        background: linear-gradient(-90deg, rgba(255, 255, 255, 0) 40%, #4e516617 100%);
+    }
+    & img {
+        max-height: 500px;
+    }
+`;
+const TextContent = styled.p`
+    width: 100%;
+    padding-bottom: 0px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin-left: 5px;
 `;
 
 function Content({
@@ -63,6 +95,7 @@ function Content({
     const [modifText, setModifText] = useState(text);
     const [modifFile, setModifFile] = useState();
 
+    console.log(text);
     function newContent() {
         let URLtocall = apiURL + '/content';
         if (window.location.href == 'http://localhost:3000/profil') {
@@ -108,8 +141,8 @@ function Content({
     };
 
     return (
-        <ContentContainer className='container m-2 p-2 col-3'>
-            <div className='d-flex justify-content-between border-bottom border-danger pb-1'>
+        <ContentContainer className='container m-2 p-2 bg-white'>
+            <div className='d-flex justify-content-between pb-1'>
                 <div className='d-flex'>
                     <Link to='/profil' state={userId}>
                         <AvatarImgContainer className='me-2'>
@@ -157,7 +190,7 @@ function Content({
                 ) : null}
             </div>
             {modifContentOpen === true ? (
-                <form onSubmit={uploadContent} className='border-bottom border-danger mt-2'>
+                <form onSubmit={uploadContent} className='mt-2'>
                     <textarea
                         className='form-control'
                         id='exampleFormControlTextarea1'
@@ -168,16 +201,24 @@ function Content({
                     ></textarea>
                     <div className='d-flex justify-content-between mt-2'>
                         <input type='file' onChange={(e) => setModifFile(e.target.files[0])}></input>
-                        <button type='submit' className='btn btn-primary mb-2'>
+                        <button type='submit' className='btn btn-danger mb-2'>
                             Enregistrer
                         </button>
                     </div>
                 </form>
-            ) : null}
-            <p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{text}</p>
-            <div>
-                <img src={img} className='img-fluid' alt='' />
-            </div>
+            ) : (
+                <ContentTextandImg>
+                    <TextContent>{text}</TextContent>
+                    {img == null ? null : (
+                        <ImgContent className={text.length > 0 ? 'border-top' : null}>
+                            <div className='left-size'></div>
+                            <img src={img} className='img-fluid' alt='' />
+                            <div className='right-size'></div>
+                        </ImgContent>
+                    )}
+                </ContentTextandImg>
+            )}
+
             <ContentInteraction
                 key={contentId}
                 likes={like}

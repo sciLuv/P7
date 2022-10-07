@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import logo from '../assets/logo.svg';
 import logoName from '../assets/logoName.svg';
 import { Link, useLocation } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import userInfoSuppr from '../utilis/userInfoSuppr';
 
@@ -14,7 +14,7 @@ const StyledHeader = styled.header`
     width: 100%;
     padding: 5px 0px;
     background-color: white;
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 30%, rgba(255, 0, 0, 0.07) 100%);
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.274);
 `;
 const StyledLogo = styled.div`
     display: flex;
@@ -46,7 +46,7 @@ const Avatar = styled.img`
 `;
 
 const DeconnectDropDown = styled.ul`
-    left: -135px !important;
+    left: ${(props) => (props.profil ? '-70px !important' : '-135px !important')};
     cursor: pointer;
     user-select: none;
 `;
@@ -105,7 +105,10 @@ function Header() {
                                     >
                                         <i className='fa-solid fa-arrow-right-from-bracket'></i>
                                     </div>
-                                    <DeconnectDropDown className='dropdown-menu position-absolute'>
+                                    <DeconnectDropDown
+                                        className='dropdown-menu position-absolute'
+                                        profil={!(idProfil - authCtx.id === 0)}
+                                    >
                                         <li>
                                             <div
                                                 className='dropdown-item'

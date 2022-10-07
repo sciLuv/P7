@@ -1,7 +1,11 @@
 import { useState, useContext } from 'react';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import options from '../utilis/requestOptions.jsx';
+import styled from 'styled-components';
 
+const LikeIcon = styled.i`
+    color: #fd2d01;
+`;
 function ContentLike(likes) {
     const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
     const authCtx = useContext(UserAuth);
@@ -25,7 +29,9 @@ function ContentLike(likes) {
                 liking();
             }}
         >
-            <i className={(likeNum === true ? 'fa-solid ' : 'fa-regular ') + 'fa-thumbs-up me-1'}></i>
+            <LikeIcon
+                className={(likeNum === true ? 'fa-solid ' : 'fa-regular ') + 'fa-thumbs-up me-1 hover-item'}
+            ></LikeIcon>
             {like} {like <= 1 ? "j'aime" : "j'aimes"}
         </div>
     );

@@ -12,24 +12,6 @@ textarea {
 }
 
 
-.user-info-profil-page{
-    padding-right: 10px;
-}
-
-.avatar-profil-page{
-    height: 130px;
-    width: 130px;
-}
-.camContainer{
-    position: absolute;
-    left: 140px;
-    top: 85px;
-}
-.cam{
-    width: 30px;
-    height: 30px;
-}
-
 /* login page */
 
 .fa-eye, .fa-eye-slash{

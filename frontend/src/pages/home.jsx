@@ -13,13 +13,20 @@ import options from '../utilis/requestOptions.jsx';
 import whiteSpaceVerification from '../utilis/formStringValidation.jsx';
 
 const AvatarImgContainer = styled.div`
-    height: 40px;
+    height: 45px;
+    min-height: 45px;
     width: 45px;
+    min-width: 45px;
 `;
 const Avatar = styled.img`
     width: 100%;
     height: 100%;
     object-fit: cover;
+`;
+const ContentContainer = styled.div`
+    @media (max-width: 576px) {
+        margin-left: -7px;
+    }
 `;
 
 function Home() {
@@ -83,12 +90,12 @@ function Home() {
     return (
         <>
             <Header />
-            <div className='container'>
-                <div className='container m-2 p-2  col-12 d-flex'>
+            <ContentContainer className='container'>
+                <div className='container m-2 p-2  col-12 d-flex justify-content-center'>
                     <AvatarImgContainer className='me-2'>
                         <Avatar src={userInfo.imgUrl} className='img-fluid rounded-circle' alt='' />
                     </AvatarImgContainer>
-                    <form onSubmit={handleSubmit} className='col-11'>
+                    <form onSubmit={handleSubmit} className='col-md-11 col-10'>
                         <textarea
                             className='form-control'
                             id='exampleFormControlTextarea1'
@@ -102,7 +109,7 @@ function Home() {
                                 type='file'
                                 onChange={(e) => setFile(e.target.files[0])} /* value={file} */
                             ></input>
-                            <button type='submit' className='btn btn-primary'>
+                            <button type='submit' className='btn btn-danger'>
                                 Publier
                             </button>
                         </div>
@@ -129,7 +136,7 @@ function Home() {
                         />
                     ))}
                 </section>
-            </div>
+            </ContentContainer>
         </>
     );
 }

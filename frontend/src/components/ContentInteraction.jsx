@@ -1,9 +1,14 @@
 import { useState, useContext, useEffect } from 'react';
+import styled from 'styled-components';
 import Comment from './Comment';
 import ContentLike from './likeContent';
 import { UserAuth } from '../utilis/contextValue.jsx';
 import options from '../utilis/requestOptions.jsx';
 import whiteSpaceVerification from '../utilis/formStringValidation';
+
+const CommentIcon = styled.i`
+    color: #fd2d01;
+`;
 
 function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
@@ -11,7 +16,6 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
     const [commentaries, setCommentaries] = useState([]);
     const [isCommentOpen, setIsCommentOpen] = useState(false);
     const [newComment, setNewComment] = useState('');
-    //to
     const [commentNum, setCommentNum] = useState(comments.length);
 
     const authCtx = useContext(UserAuth);
@@ -62,16 +66,16 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
 
     return (
         <>
-            <div className='d-flex border-top border-danger mt-2 justify-content-between'>
+            <div className='d-flex border-top justify-content-between'>
                 <ContentLike likes={likes} usersLike={usersLike} contentId={contentId} />
 
-                <div onClick={openComment}>
-                    <i className='fa-regular fa-comment me-1'></i>
-                    {commentNum} commentaire(s)
+                <div onClick={openComment} className='hover-item'>
+                    <CommentIcon className='fa-regular fa-comment me-1'></CommentIcon>
+                    {commentNum} {commentNum <= 1 ? 'commentaire' : 'commentaires'}
                 </div>
             </div>
             {isCommentOpen ? (
-                <div className='border-top border-danger mt-2 '>
+                <div className='border-top mt-2 '>
                     {commentaries.map((comment) => (
                         <Comment
                             key={'comment ' + comment.id}
@@ -86,6 +90,8 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
                             contentId={comment.contentId}
                             commentaries={commentaries}
                             setCommentaries={setCommentaries}
+                            setCommentNum={setCommentNum}
+                            commentNum={commentNum}
                         />
                     ))}
 
