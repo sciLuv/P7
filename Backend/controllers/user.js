@@ -81,6 +81,16 @@ const login = (req, res) => {
     .catch(error =>{ res.status(500).json({ error } + "Une erreur de serveur est survenue." ) })
 };
 
+//to get user info just with his jsontoken
+const userInfoAfterRefresh = (req, res) =>{
+    console.log(req.auth.userId);
+    User.findOne({where: {id: req.auth.userId}, 
+        attributes: ['firstname', 'lastname', 'imgUrl', 'permission', 'id']
+    }) 
+    .then(user =>res.status(200).json(user))
+    .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
+}
+
 //to get all content from one user and his profil. 
 const profilContent = (req, res) => {
     Content.findAll({
@@ -138,4 +148,4 @@ const profilChangeImg = (req, res) => {
 }
 
 //exportation of the before declared functions for add them in the router
-export { signup, login, profilContent, getOneUser, profilChangeImg };
+export { signup, login, userInfoAfterRefresh, profilContent, getOneUser, profilChangeImg };

@@ -58,6 +58,8 @@ function Home() {
     const authCtx = useContext(UserAuth);
 
     sessionStorage.removeItem('lastProfilPageId');
+    console.log(userInfo);
+    console.log(authCtx);
 
     useEffect(() => {
         async function getContent() {

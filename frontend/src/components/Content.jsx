@@ -144,6 +144,7 @@ function Content({
         if ((modifTextIsCorrect == true && modifFile == null) || modifFile != null) {
             let formData = new FormData();
             formData.append('content', JSON.stringify({ text: modifText }));
+
             formData.append('image', modifFile);
 
             e.preventDefault();

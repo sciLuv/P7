@@ -112,6 +112,7 @@ function Profil() {
         idProfil = sessionStorage.getItem('lastProfilPageId');
     }
 
+    console.log(authCtx);
     //allow possibilities to go to another page of the application with link, with no page refreshing
     const navigate = useNavigate();
 

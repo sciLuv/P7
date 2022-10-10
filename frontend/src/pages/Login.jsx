@@ -46,7 +46,6 @@ function Login() {
                 authCtx.savePermission(data.userPermission);
                 authCtx.saveImg(data.imgUrl);
                 sessionStorage.setItem('token', data.token);
-                sessionStorage.setItem('id', data.userId);
                 navigate('/');
                 /* window.location.replace('http://localhost:' + process.env.REACT_APP_FRONTEND_PORT + '/'); */
             })

@@ -76,6 +76,7 @@ const updateOne = (req, res) => {
     Content.findOne({where : {id :req.params.id}})
     .then( Content => {
         if(req.file){
+            console.log('test');
             if(Content.imgUrl != null){
                 const filename = Content.imgUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`,(err) => {
@@ -85,7 +86,7 @@ const updateOne = (req, res) => {
             }
         }
         Content.text = JSON.parse(req.body.content).text;
-        Content.imgUrl = req.body.content && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+        Content.imgUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : Content.imgUrl;
         Content.save()
         .then(() => res.status(200).json({message : 'contenu modifié.'}))
         .catch(error => res.status(401).json( error  + "Il manque une information dans les champs qui représente votre contenu."));
