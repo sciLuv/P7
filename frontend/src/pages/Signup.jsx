@@ -1,18 +1,23 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
+//React and ReactRouter elements's import
+import { useState } from 'react'; //react method to use data in state and context
+import { useNavigate } from 'react-router-dom'; //react-dom method to go to another page
+//React component
+import Header from '../components/Header'; //header component
 
+//function in link with all thing happen in the home page
 function Signup(props) {
+    //all constants using react state to save info in link with user inscription
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
 
-    const [passwordVisibility, setPasswordVisibility] = useState(false);
+    //constant and variable in link with control of visibility of the password input
+    let passwordContent = document.getElementById('password'); //JS representation of the password input
+    const [passwordVisibility, setPasswordVisibility] = useState(false); //state to see or not the password
 
-    let passwordContent = document.getElementById('password');
-
+    //function to show or not the password text in the input
+    //true = password is visible and the input is text, false = password invisible, input is password
     function showPassword() {
         if (passwordVisibility === false) {
             setPasswordVisibility(true);
@@ -22,8 +27,11 @@ function Signup(props) {
             passwordContent.type = 'password';
         }
     }
+
+    //allow possibilities to go to another page of the application with link, with no page refreshing
     const navigate = useNavigate();
 
+    //to send request to the server to create account
     let handleSubmit = async (e) => {
         e.preventDefault();
         const reqOptions = {
@@ -45,6 +53,7 @@ function Signup(props) {
             .catch((err) => console.log(err));
     };
 
+    //here, use the bootstrap class to adding style to the component.
     return (
         <>
             <Header />
@@ -112,7 +121,7 @@ function Signup(props) {
                         <i
                             className={
                                 'far ' +
-                                (passwordVisibility == false ? 'fa-eye-slash ' : 'fa-eye ') +
+                                (passwordVisibility === false ? 'fa-eye-slash ' : 'fa-eye ') +
                                 'align-self-end me-3'
                             }
                             id='togglePassword'

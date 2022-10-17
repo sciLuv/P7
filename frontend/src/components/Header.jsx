@@ -1,10 +1,13 @@
+//style relative Import
 import styled from 'styled-components';
 import logo from '../assets/logo.svg';
 import logoName from '../assets/logoName.svg';
-import { Link, useLocation } from 'react-router-dom';
-import { useContext, useState } from 'react';
-import { UserAuth } from '../utilis/contextValue.jsx';
-import userInfoSuppr from '../utilis/userInfoSuppr';
+//React and ReactRouter elements's import
+import { useContext } from 'react'; //react method to use data in state and context
+import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
+import { Link, useLocation } from 'react-router-dom'; //react-dom method to go to another page
+//function
+import userInfoSuppr from '../utilis/userInfoSuppr'; //delete data in session storage
 
 const StyledHeader = styled.header`
     position: sticky;
@@ -52,10 +55,13 @@ const DeconnectDropDown = styled.ul`
 `;
 
 function Header() {
+    //actual users informations set in react memory, available everywhere in the app.
     const authCtx = useContext(UserAuth);
+    //constants to show or not the link to the profil user, in the navbar
     const location = useLocation();
     const idProfil = location.state;
 
+    //here, use the bootstrap class to adding style to the component.
     return (
         <StyledHeader className='d-flex justify-content-between'>
             <Link to='/'>
@@ -66,64 +72,70 @@ function Header() {
             </Link>
             <nav className='navbar'>
                 <ul className='navbar-nav d-flex flex-row'>
-                    {authCtx.token === null ? (
-                        <>
-                            <li className='nav-item m-2'>
-                                <Link className='nav-link' to='/signup'>
-                                    Inscription
-                                </Link>
-                            </li>
-                            <li className='nav-item m-2'>
-                                <Link className='nav-link' to='/login'>
-                                    Connexion
-                                </Link>
-                            </li>
-                        </>
-                    ) : (
-                        <>
-                            {idProfil === authCtx.id ? null : (
-                                <li className='nav-item '>
-                                    <Link className='nav-link' to='/profil' state={authCtx.id}>
-                                        <AvatarImgContainer className='me-2'>
-                                            <Avatar
-                                                src={authCtx.img}
-                                                className='img-fluid rounded-circle'
-                                                alt=''
-                                            />
-                                        </AvatarImgContainer>
+                    {
+                        //show inscription and connection button if useContext doesn't exist
+                        authCtx.token === null ? (
+                            <>
+                                <li className='nav-item m-2'>
+                                    <Link className='nav-link' to='/signup'>
+                                        Inscription
                                     </Link>
                                 </li>
-                            )}
-
-                            <li className='nav-item mb-5 me-2'>
-                                <div className='d-flex flex-column'>
-                                    <div
-                                        className='mt-2'
-                                        type='button'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                    >
-                                        <i className='fa-solid fa-arrow-right-from-bracket'></i>
-                                    </div>
-                                    <DeconnectDropDown
-                                        className='dropdown-menu position-absolute'
-                                        profil={!(idProfil - authCtx.id === 0)}
-                                    >
-                                        <li>
-                                            <div
-                                                className='dropdown-item'
-                                                onClick={() => {
-                                                    userInfoSuppr();
-                                                }}
-                                            >
-                                                déconnexion
-                                            </div>
+                                <li className='nav-item m-2'>
+                                    <Link className='nav-link' to='/login'>
+                                        Connexion
+                                    </Link>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                {
+                                    //to show or not the link to the profil user, in the navbar
+                                    idProfil === authCtx.id ? null : (
+                                        <li className='nav-item '>
+                                            <Link className='nav-link' to='/profil' state={authCtx.id}>
+                                                <AvatarImgContainer className='me-2'>
+                                                    <Avatar
+                                                        src={authCtx.img}
+                                                        className='img-fluid rounded-circle'
+                                                        alt=''
+                                                    />
+                                                </AvatarImgContainer>
+                                            </Link>
                                         </li>
-                                    </DeconnectDropDown>
-                                </div>
-                            </li>
-                        </>
-                    )}
+                                    )
+                                }
+
+                                <li className='nav-item mb-5 me-2'>
+                                    <div className='d-flex flex-column'>
+                                        <div
+                                            className='mt-2'
+                                            type='button'
+                                            data-bs-toggle='dropdown'
+                                            aria-expanded='false'
+                                        >
+                                            <i className='fa-solid fa-arrow-right-from-bracket'></i>
+                                        </div>
+                                        <DeconnectDropDown
+                                            className='dropdown-menu position-absolute'
+                                            profil={!(idProfil - authCtx.id === 0)}
+                                        >
+                                            <li>
+                                                <div
+                                                    className='dropdown-item'
+                                                    onClick={() => {
+                                                        userInfoSuppr();
+                                                    }}
+                                                >
+                                                    déconnexion
+                                                </div>
+                                            </li>
+                                        </DeconnectDropDown>
+                                    </div>
+                                </li>
+                            </>
+                        )
+                    }
                 </ul>
             </nav>
         </StyledHeader>

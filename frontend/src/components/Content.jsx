@@ -1,26 +1,21 @@
-import styled from 'styled-components';
-import imgRegular from '../assets/image-regular.svg';
-import colors from '../utilis/colors.jsx';
+//style relative Import
+import styled from 'styled-components'; // to stylish component directly in the react file
+import imgRegular from '../assets/image-regular.svg'; //the input img btn
+import colors from '../utilis/colors.jsx'; //CSS colors value
+//React and ReactRouter elements's import
+import { useContext, useState } from 'react'; //react method to use data in state and context
+import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
+import { Link } from 'react-router-dom'; //react-dom method to go to another page
+//function
 import ContentInteraction from './ContentInteraction.jsx';
-import { useContext, useState } from 'react';
-import { UserAuth } from '../utilis/contextValue.jsx';
-import { Link } from 'react-router-dom';
-import options from '../utilis/requestOptions.jsx';
-import whiteSpaceVerification from '../utilis/formStringValidation.jsx';
+import options from '../utilis/requestOptions.jsx'; //function to manage option of the call of the API
+import whiteSpaceVerification from '../utilis/formStringValidation.jsx'; //function to validate the form of text send to the backend
 
+//style for the content
 const ContentContainer = styled.article`
     height: 100%;
     width: 100%;
     border-radius: 5px;
-`;
-const AvatarImgContainer = styled.div`
-    height: 45px;
-    width: 45px;
-`;
-const Avatar = styled.img`
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 `;
 const UserName = styled.span`
     color: ${colors.tertiary};
@@ -64,23 +59,20 @@ const TextContent = styled.p`
 const InputFile = styled.input`
     margin-left: 5px;
     &::file-selector-button {
-        width: 30px !important;
-        height: 30px !important;
-        opacity: 0;
-    }
-    &::before {
-        width: 30px !important;
-        height: 30px !important;
-        content: '';
-        position: absolute;
-        z-index: 5;
-        border-radius: 5px;
-        opacity: ${(props) => (props.isfile ? 1 : 0.2)};
-        background: url(${imgRegular});
         cursor: pointer;
+        //two rules to remove basic style of the button
+        border: none;
+        color: rgba(255, 255, 255, 0);
+        //two rules to resizing the button
+        width: 30px !important;
+        height: 30px !important;
+        //in function of the props id file change the opacity (in function of selection of the file)
+        opacity: ${(props) => (props.isfile ? 1 : 0.2)};
+        //image of the button
+        background: url(${imgRegular});
     }
 `;
-
+//function in link with modification and suppression of content
 function Content({
     firstname,
     lastname,
@@ -96,8 +88,10 @@ function Content({
     contentList,
     setContentList,
 }) {
+    //base URL of the API
     const apiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
 
+    //serveDate, time, formatedTime, optionsDate, formatedDate are use to formated date of the backend to a french format
     let servDate = date.split('T').join(' ').split('.000Z').join('');
     let time = servDate.split(/[- :]/);
     var formatedTime = new Date(Date.UTC(time[0], time[1] - 1, time[2], time[3], time[4], time[5]));
@@ -110,12 +104,21 @@ function Content({
     };
     let formatedDate = formatedTime.toLocaleDateString(process.env.REACT_APP_LOCAL_DATE, optionsDate);
 
-    const authCtx = useContext(UserAuth);
-    const [modifContentOpen, setModifContentOpen] = useState(false);
-    const [modifText, setModifText] = useState(text);
-    const [modifFile, setModifFile] = useState(null);
+    /* ---------------------------------------------------------------------------------------------------------- */
 
+    //actual users informations set in react memory, available everywhere in the app.
+    const authCtx = useContext(UserAuth);
+
+    //constants in link with content new information (to upload)
+    const [modifText, setModifText] = useState(text); //new text to send to the backend
+    const [modifFile, setModifFile] = useState(null); //new image to send to the backend
+
+    //to open interface of modification of the content
+    const [modifContentOpen, setModifContentOpen] = useState(false);
+
+    //to refresh contents when user update or delete one of his content
     function newContent() {
+        //the call of the API is different in function of the page of the app (home or profil page)
         let URLtocall = apiURL + '/content';
         if (window.location.href == 'http://localhost:3000/profil') {
             URLtocall = apiURL + '/user/' + userId + '/content';
@@ -125,49 +128,58 @@ function Content({
                 return res.json();
             })
             .then((data) => {
-                setContentList(data);
+                setContentList(data); //put in state all contents to show in function of the page
             })
             .catch((err) => {
                 console.log(err);
             });
     }
 
+    //delete the content
     let deleteContent = async () => {
+        //call to the API to delete one content
         fetch(apiURL + '/content/' + contentId, options(authCtx, 'DELETE'))
             .then((res) => res.json())
+            //to refresh the page after deletion
             .then(() => newContent())
             .catch((err) => console.log(err));
     };
 
+    //upload the content
     let uploadContent = async (e) => {
+        //here verification of the validity of the form send
+        //verification of whitespace and presence of file
         let modifTextIsCorrect = whiteSpaceVerification(modifText);
-        if ((modifTextIsCorrect == true && modifFile == null) || modifFile != null) {
+        if ((modifTextIsCorrect === true && modifFile == null) || modifFile != null) {
+            //create form data to send
             let formData = new FormData();
             formData.append('content', JSON.stringify({ text: modifText }));
-
             formData.append('image', modifFile);
 
             e.preventDefault();
+            //call to the API to send changed content to the backend
             fetch(apiURL + '/content/' + contentId, options(authCtx, 'PUT', formData))
                 .then((res) => {
                     return res.json();
                 })
                 .then((data) => {
-                    newContent();
-                    setModifContentOpen(false);
+                    //if the call to the API is successful :
+                    newContent(); //refreshing the page after uploading
+                    setModifContentOpen(false); //close the interface of modification
                 })
                 .catch((err) => console.log(err));
         }
     };
 
+    //here, use the bootstrap class to adding style to the component.
     return (
         <ContentContainer className='container m-2 p-2 bg-white'>
             <div className='d-flex justify-content-between pb-1'>
                 <div className='d-flex'>
                     <Link to='/profil' state={userId}>
-                        <AvatarImgContainer className='me-2'>
-                            <Avatar src={avatar} className='img-fluid rounded-circle' alt='' />
-                        </AvatarImgContainer>
+                        <div className='me-2 avatarImgContainer'>
+                            <img src={avatar} className='img-fluid rounded-circle avatar' alt='' />
+                        </div>
                     </Link>
                     <div>
                         <Link to='/profil' state={userId}>
@@ -178,72 +190,89 @@ function Content({
                         <ContentDate className='d-block'>{formatedDate}</ContentDate>
                     </div>
                 </div>
-                {userId === authCtx.id || authCtx.permission === true ? (
-                    <div className='btn-group'>
-                        <div
-                            className='mt-2 me-2'
-                            type='button'
-                            data-bs-toggle='dropdown'
-                            aria-expanded='false'
-                        >
-                            <i className='fa-solid fa-ellipsis-vertical fa-lg'></i>
+                {
+                    //ternary operator to let the fontend possibility for user to change the content (only possible if its his own content)
+                    userId === authCtx.id || authCtx.permission === true ? (
+                        <div className='btn-group'>
+                            <div
+                                className='mt-2 me-2'
+                                type='button'
+                                data-bs-toggle='dropdown'
+                                aria-expanded='false'
+                            >
+                                <i className='fa-solid fa-ellipsis-vertical fa-lg'></i>
+                            </div>
+                            <ul className='dropdown-menu'>
+                                <li>
+                                    <div
+                                        className='dropdown-item'
+                                        //event to open interface of modification
+                                        onClick={() => setModifContentOpen(true)}
+                                    >
+                                        modifier
+                                    </div>
+                                </li>
+                                <hr />
+                                <li>
+                                    <div
+                                        className='dropdown-item'
+                                        //event to delete content
+                                        onClick={() => {
+                                            deleteContent();
+                                        }}
+                                    >
+                                        supprimer
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <ul className='dropdown-menu'>
-                            <li>
-                                <div className='dropdown-item' onClick={() => setModifContentOpen(true)}>
-                                    modifier
-                                </div>
-                            </li>
-                            <hr />
-                            <li>
-                                <div
-                                    className='dropdown-item'
-                                    onClick={() => {
-                                        deleteContent();
-                                    }}
-                                >
-                                    supprimer
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                ) : null}
+                    ) : null
+                }
             </div>
-            {modifContentOpen === true ? (
-                <form onSubmit={uploadContent} className='mt-2'>
-                    <textarea
-                        className='form-control'
-                        id='exampleFormControlTextarea1'
-                        value={modifText}
-                        onChange={(e) => setModifText(e.target.value)}
-                        rows='1'
-                        placeholder='Quelque chose a partager a vos collegues ?'
-                    ></textarea>
-                    <div className='d-flex justify-content-between mt-2'>
-                        <InputFile
-                            type='file'
-                            isfile={modifFile === null ? false : true}
-                            onChange={(e) => setModifFile(e.target.files[0])}
-                        ></InputFile>
-                        <button type='submit' className='btn btn-danger mb-2'>
-                            Enregistrer
-                        </button>
-                    </div>
-                </form>
-            ) : (
-                <ContentTextandImg>
-                    <TextContent>{text}</TextContent>
-                    {img == null ? null : (
-                        <ImgContent className={text.length > 0 ? 'border-top' : null}>
-                            <div className='left-size'></div>
-                            <img src={img} className='img-fluid' alt='' />
-                            <div className='right-size'></div>
-                        </ImgContent>
-                    )}
-                </ContentTextandImg>
-            )}
+
+            {
+                //ternary operator to let the fontend possibility for user to change the content (only possible if its his own content)
+                modifContentOpen === true ? (
+                    <form onSubmit={uploadContent} className='mt-2'>
+                        <textarea
+                            className='form-control'
+                            id='exampleFormControlTextarea1'
+                            //in link with the state of the modifying text to send
+                            value={modifText}
+                            //Event to modify state value of text for modification of the content
+                            onChange={(e) => setModifText(e.target.value)}
+                            rows='1'
+                            placeholder='Quelque chose a partager a vos collegues ?'
+                        ></textarea>
+                        <div className='d-flex justify-content-between mt-2'>
+                            <InputFile
+                                type='file'
+                                //props to send info to style of the button of input of adding file, to give feedback to the user
+                                isfile={modifFile === null ? false : true}
+                                //Event to modify state value of text for modification of the content
+                                onChange={(e) => setModifFile(e.target.files[0])}
+                            ></InputFile>
+                            <button type='submit' className='btn btn-danger mb-2'>
+                                Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <ContentTextandImg>
+                        <TextContent>{text}</TextContent>
+                        {img == null ? null : (
+                            <ImgContent className={text.length > 0 ? 'border-top' : null}>
+                                <div className='left-size'></div>
+                                <img src={img} className='img-fluid' alt='' />
+                                <div className='right-size'></div>
+                            </ImgContent>
+                        )}
+                    </ContentTextandImg>
+                )
+            }
 
             <ContentInteraction
+                //here all information send to the contentInteraction component for its operation
                 key={contentId}
                 likes={like}
                 comments={comments}

@@ -1,70 +1,70 @@
 //style relative Import
-import styled from 'styled-components';
-import imgRegular from '../assets/image-regular.svg';
+import styled from 'styled-components'; // to stylish component directly in the react file
+import imgRegular from '../assets/image-regular.svg'; //image of the file adding input
 //React and ReactRouter elements's import
-import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserAuth } from '../utilis/contextValue.jsx';
-//function and React component import
-import Content from '../components/Content.jsx';
-import Header from '../components/Header.jsx';
-import userConnect from '../utilis/reconnection.jsx';
-import userInfoSuppr from '../utilis/userInfoSuppr.jsx';
-import options from '../utilis/requestOptions.jsx';
-import whiteSpaceVerification from '../utilis/formStringValidation.jsx';
+import { useEffect, useState, useContext } from 'react'; //react method to use data in state and context
+import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
+import { useNavigate } from 'react-router-dom'; //react-dom method to go to another page
+//React component
+import Content from '../components/Content.jsx'; //content component
+import Header from '../components/Header.jsx'; //header component
+//function
+import userConnect from '../utilis/reconnection.jsx'; //call to the API to find again user info with token in sessionStorage
+import userInfoSuppr from '../utilis/userInfoSuppr.jsx'; //delete data in session storage
+import options from '../utilis/requestOptions.jsx'; //function to manage option of the call of the API
+import whiteSpaceVerification from '../utilis/formStringValidation.jsx'; //function to validate the form of text send to the backend
 
-const AvatarImgContainer = styled.div`
-    height: 45px;
-    min-height: 45px;
-    width: 45px;
-    min-width: 45px;
-`;
-const Avatar = styled.img`
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-`;
+//the css style of the home page
 const ContentContainer = styled.div`
     @media (max-width: 576px) {
         margin-left: -7px;
     }
 `;
-
 const InputFile = styled.input`
     margin-left: 5px;
     &::file-selector-button {
-        width: 30px !important;
-        height: 30px !important;
-        opacity: 0;
-    }
-    &::before {
-        width: 30px !important;
-        height: 30px !important;
-        content: '';
-        position: absolute;
-        z-index: 5;
-        border-radius: 5px;
-        opacity: ${(props) => (props.isfile ? 1 : 0.2)};
-        background: url(${imgRegular});
         cursor: pointer;
+        //two rules to remove basic style of the button
+        border: none;
+        color: rgba(255, 255, 255, 0);
+        //two rules to resizing the button
+        width: 30px !important;
+        height: 30px !important;
+        //in function of the props id file change the opacity (in function of selection of the file)
+        opacity: ${(props) => (props.isfile ? 1 : 0.2)};
+        //image of the button
+        background: url(${imgRegular});
     }
 `;
 
+//function in link with all thing happen in the home page
 function Home() {
-    const ApiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
-    const [contentList, setContentList] = useState([]);
-    const [userInfo, setUserInfo] = useState([]);
+    //base URL of the API
+    const apiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
+
+    //constants in link with contents show in home page
+    const [contentList, setContentList] = useState([]); //state of the content seen in home page
+    const [userInfo, setUserInfo] = useState([]); //state of user info using the app
+
+    //constants in link with content adding form
+    const [text, setText] = useState(''); //state of text of the new content
+    const [file, setFile] = useState(null); //state of image of the new content
+
+    const authCtx = useContext(UserAuth); //context of user info
+    //method of react-router allow possibilities to go to another page of the application with link, with no page refreshing
     const navigate = useNavigate();
-    const authCtx = useContext(UserAuth);
 
-    sessionStorage.removeItem('lastProfilPageId');
-    console.log(userInfo);
-    console.log(authCtx);
+    sessionStorage.removeItem('lastProfilPageId'); // to remove the sessionStorage data use to show profil page of one user
 
+    //useEffect hook, use here to get content to show in the home page
+    //contain two async function who calling API in the main() await function
+    //in this wait we waiting the result of the first function and of the API, to call the second
     useEffect(() => {
         async function getContent() {
-            fetch(ApiURL + '/content', options(authCtx))
+            //call to the API to get all content to show in home page
+            fetch(apiURL + '/content', options(authCtx))
                 .then((res) => {
+                    //if the request is failed, we delete information in sessionStorage and lead to login page
                     if (!res.ok) {
                         userInfoSuppr();
                     } else {
@@ -72,36 +72,38 @@ function Home() {
                     }
                 })
                 .then((data) => {
-                    console.log(data);
-                    setContentList(data);
+                    setContentList(data); //updating of the state of the contents to show in home page
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
         async function main() {
-            await userConnect(authCtx, navigate, ApiURL, setUserInfo);
+            await userConnect(authCtx, navigate, apiURL, setUserInfo);
             await getContent();
         }
         main();
     }, []);
 
-    //les constantes liées au form d'ajout de contenu
-    const [text, setText] = useState('');
-    const [file, setFile] = useState(null);
-
+    //Event function to adding content (in link with form)
     let handleSubmit = async (e) => {
+        //here verification of the validity of the form send
+        //verification of whitespace and presence of file
         let newTextIsCorrect = whiteSpaceVerification(text);
-        if ((newTextIsCorrect == true && file == null) || file != null) {
+        if ((newTextIsCorrect === true && file == null) || file != null) {
+            //create formdata to send
             let formData = new FormData();
             formData.append('content', JSON.stringify({ text: text }));
             formData.append('image', file);
 
             e.preventDefault();
-            fetch(ApiURL + '/content', options(authCtx, 'POST', formData))
+            //call to the API to send new content to the backend
+            fetch(apiURL + '/content', options(authCtx, 'POST', formData))
                 .then((res) => res.json())
                 .then((data) => {
-                    setContentList(data);
+                    //if the call to the API is successful :
+                    setContentList(data); // change state of content to show
+                    //emptying inputs of form
                     setFile(null);
                     setText('');
                 })
@@ -111,14 +113,15 @@ function Home() {
         }
     };
 
+    //here, use the bootstrap class to adding style to the component.
     return (
         <>
             <Header />
             <ContentContainer className='container'>
                 <div className='container m-2 p-2  col-12 d-flex justify-content-center'>
-                    <AvatarImgContainer className='me-2'>
-                        <Avatar src={userInfo.imgUrl} className='img-fluid rounded-circle' alt='' />
-                    </AvatarImgContainer>
+                    <div className='me-2 avatarImgContainer'>
+                        <img src={userInfo.imgUrl} className='img-fluid rounded-circle avatar' alt='' />
+                    </div>
                     <form onSubmit={handleSubmit} className='col-md-11 col-10'>
                         <textarea
                             className='form-control'
@@ -131,10 +134,11 @@ function Home() {
                         <div className='d-flex justify-content-between mt-2'>
                             <InputFile
                                 type='file'
+                                //to send info to the style in function of the state of file selection
                                 isfile={file === null ? false : true}
+                                //event to add file to the state containing it
                                 onChange={(e) => {
                                     setFile(e.target.files[0]);
-                                    console.log(file);
                                 }}
                             ></InputFile>
                             <button type='submit' className='btn btn-danger'>
@@ -147,6 +151,7 @@ function Home() {
                 <section>
                     {contentList.map((content) => (
                         <Content
+                            //here send all datas for Content working (props)
                             key={content.id}
                             contentId={content.id}
                             firstname={content.user.firstname}

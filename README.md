@@ -4,7 +4,17 @@
 **Its the 7th, and the last, project of the OpenClassrooms dev web course.**
 
 ## Frontend
- (in work)
+ A REACT APP Build with CREATE REACT APP
+
+### List of node not native backend package : 
+
+**Dotenv** : *to remove environnement variable* from code to a specific file for security.<br><br>
+**styledComponent** : to write CSS directly in JSX files.
+
+### to install and use front-end : 
+
+install nodeJS and its dependencies, in front-end folder : ```npm install```<br>
+create a .env file and asign a value to environnement variables<br>
  
 ## Backend
 
@@ -25,6 +35,7 @@ A REST API with CRUD operations, and a MySQL database who manage 3 tables.
 **cors** : allows to avoid various errors related to the HTTP CORS security.<br><br>
 **helmet** : increases the security of our http header returned not express.<br><br>
 **express-rate-limit** : allows to limit the requests to one api to avoid server overload.
+**he** : add the capacity to change caracter to html entites
 
 ### to install and use back-end : 
 
