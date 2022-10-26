@@ -3,7 +3,7 @@ import { Router } from 'express';
 const router = Router();
 
 //import all function to do all action in link with content 
-import { getAll, createOne, updateOne, deleteOne, like } from '../controllers/content.js';
+import { getAll, createOne, updateOne, deleteOne, like} from '../controllers/content.js';
 //middleware to verify if the user is connected
 import auth from '../middleware/auth.js';
 //middleware to verify if the user have the right to update or delete

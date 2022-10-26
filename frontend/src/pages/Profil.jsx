@@ -33,7 +33,8 @@ const CamContainer = styled.div`
     user-select: none;
 `;
 
-const Cam = styled.div`
+const Cam = styled.button`
+    border: none;
     width: 30px;
     height: 30px;
     &::before {

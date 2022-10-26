@@ -1,5 +1,6 @@
 //style relative Import
 import styled from 'styled-components'; // to stylish component directly in the react file
+import StyledGlobalStyle from '../utilis/globalStyle.jsx';
 //React and ReactRouter elements's import
 import { useState, useContext } from 'react'; //react method to use data in state and context
 import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
@@ -121,9 +122,13 @@ function Comment({
     //here, use the bootstrap class to adding style to the component.
     return (
         <div className='d-flex m-2'>
-            <Link to='/profil' state={userId}>
+            <Link to='/profil' state={userId} aria-label={'profil de ' + firstname + ' ' + lastname}>
                 <div className='me-1 avatarImgContainer'>
-                    <img src={img} className='img-fluid rounded-circle avatar' alt='' />
+                    <img
+                        src={img}
+                        className='img-fluid rounded-circle avatar'
+                        alt={'avatar de ' + firstname + ' ' + lastname}
+                    />
                 </div>
             </Link>
             <div>
@@ -138,7 +143,11 @@ function Comment({
                                     overflowWrap: 'break-word',
                                 }}
                             >
-                                <Link to='/profil' state={userId}>
+                                <Link
+                                    to='/profil'
+                                    state={userId}
+                                    aria-label={'profil de ' + firstname + ' ' + lastname}
+                                >
                                     <div className='fw-bold'>
                                         {firstname} {lastname}
                                     </div>
@@ -154,7 +163,9 @@ function Comment({
                         isModifOpen === true ? (
                             <form className='col-12 mt-1' onKeyPress={uploadComment}>
                                 <textarea
+                                    autoFocus
                                     className='form-control'
+                                    tabIndex='0'
                                     id='exampleFormControlTextarea1'
                                     //in link with the state of the modifying text to send
                                     value={modifText}
@@ -173,6 +184,7 @@ function Comment({
                         likes <= 0 || isModifOpen === true ? null : (
                             <LikeContainer className='rounded-pill'>
                                 <i
+                                    alt="pouce en l'air"
                                     className={
                                         //change the classname of the HTML element in function if the user have liked or not the comment
                                         (likeNum === true ? 'fa-solid ' : 'fa-regular ') +
@@ -187,27 +199,33 @@ function Comment({
                         //show or not the btn openning the modification comment interface
                         userId === authCtx.id || authCtx.permission === true ? (
                             <div className='btn-group'>
-                                <div
-                                    className='mt-2 me-2'
+                                <button
+                                    className='mt-2 me-2 btn-neutral'
                                     type='button'
                                     data-bs-toggle='dropdown'
                                     aria-expanded='false'
+                                    tabIndex='0'
+                                    aria-label="bouton d'option du commentaire"
                                 >
-                                    <i className='fa-solid fa-ellipsis fa-2x ms-3 align-self-center'></i>
-                                </div>
+                                    <i
+                                        className='fa-solid fa-ellipsis fa-2x ms-3 align-self-center'
+                                        alt='petit points horizontaux'
+                                    ></i>
+                                </button>
                                 <ul className='dropdown-menu'>
                                     <li>
-                                        <div
-                                            className='dropdown-item hover-item'
+                                        <button
+                                            className='dropdown-item hover-item btn-neutral'
+                                            tabIndex='0'
                                             //event to openning the modification comment interface
                                             onClick={() => setIsModifOpen(true)}
                                         >
                                             modifier
-                                        </div>
+                                        </button>
                                     </li>
                                     <hr />
                                     <li>
-                                        <div
+                                        <button
                                             className='dropdown-item hover-item'
                                             //evetn to delete comment
                                             onClick={() => {
@@ -215,7 +233,7 @@ function Comment({
                                             }}
                                         >
                                             supprimer
-                                        </div>
+                                        </button>
                                     </li>
                                 </ul>
                             </div>
@@ -225,13 +243,13 @@ function Comment({
                 {
                     //in function if the modification comment interface is open, show btn to cancel the modification, or the like btn
                     isModifOpen === true ? (
-                        <div className='ms-2 hover-item' onClick={() => setIsModifOpen(false)}>
+                        <button className='ms-2 hover-item btn-neutral' onClick={() => setIsModifOpen(false)}>
                             annuler
-                        </div>
+                        </button>
                     ) : (
-                        <div className='ms-2 hover-item' onClick={() => likingComment()}>
+                        <button className='ms-2 hover-item btn-neutral  ' onClick={() => likingComment()}>
                             j'aime
-                        </div>
+                        </button>
                     )
                 }
             </div>

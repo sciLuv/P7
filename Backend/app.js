@@ -30,15 +30,16 @@ app.use(cors());
 app.use(express.json());
 
 
-		/* 	//implementation of the rules of limitation of request by IP
-			const limiter = rateLimit({
-				windowMs: 5 * 60 * 1000, // 5 minutes
-				max: 15, // Limit each IP to 15 requests per `window` (here, per 5 minutes)
-				standardHeaders: true, //Returns the rate limit information in the `RateLimit-*` headers
-				legacyHeaders: false, //Disable `X-RateLimit-*` headers 
-			})
-			//Applies rate limiting middleware to all requests
-			app.use(limiter); */
+/* //implementation of the rules of limitation of request by IP
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minutes
+	max: 30, // Limit each IP to 60 requests per `window` (here, per 5 minutes)
+	standardHeaders: true, //Returns the rate limit information in the `RateLimit-*` headers
+	legacyHeaders: false, //Disable `X-RateLimit-*` headers 
+})
+//Applies rate limiting middleware to all requests
+app.use(limiter); */
+
 
 //makes the images accessible for all requests to the route associated with the images
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

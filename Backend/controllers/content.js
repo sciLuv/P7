@@ -1,15 +1,24 @@
 import Content from "../models/content.js"; //model of content
-import fs from 'fs'; // for delete image
-import likeFunction from "../utilis/like-function.js"; //function to add like
 import User from '../models/user.js'; //model of user
 import Comment from "../models/comment.js"; //model of comment
-import {decodeHTMLentitiesContent, decodeHTMLentitiesContent2} from "../utilis/decode-function.js";
-import { log } from "console";
+import fs from 'fs'; // for delete image
+import likeFunction from "../utilis/like-function.js"; //function to add like
+import decodeHTMLentities from "../utilis/decode-function.js";
+import he from "he";
 
-//get infos of all the contents 
+
+//get infos of all the contents  
 const getAll = (req, res) => {
-    Content.findAll({
-        limit: 10, order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
+    const pageAsNumber = Number(req.query.page);
+    if(isNaN(pageAsNumber)){
+        res.status(400).json("Une erreur de transmission est survenueeee.");
+    }
+
+    Content.findAndCountAll({
+        limit: 10,
+        offset : pageAsNumber * 10,
+        distinct: true,
+        order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
         include: [
             {
                 model: User,
@@ -17,19 +26,15 @@ const getAll = (req, res) => {
             },
             {
                 model: Comment,
-                attributes: ['id'/* ,'text', 'usersLike', 'like', 'userId', 'contentId' */],
-/*                 include: {
-                    model: User,
-                    attributes: ['firstname', 'lastname', 'imgUrl']
-                } */
+                attributes: ['id'],
             }
-        ]
+        ],
     })
     .then(contents => {
-        decodeHTMLentitiesContent2(contents); 
+        decodeHTMLentities(contents.rows); 
         res.status(200).json(contents);
     })
-    .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
+    .catch(error => {res.status(400).json({ error } + "Une erreur de transmission est survenue.");});
 };
 
 //create a new content
@@ -42,8 +47,9 @@ const createOne = (req, res) => {
         imgUrl: req.body.content && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
     })
     .then(() => { 
-        Content.findAll({
-            limit: 10, order: [['updatedAt', 'DESC']],
+        Content.findAndCountAll({
+            limit: 10,
+            order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
             include: [
                 {
                     model: User,
@@ -51,19 +57,15 @@ const createOne = (req, res) => {
                 },
                 {
                     model: Comment,
-                    attributes: ['id','text', 'usersLike', 'like'],
-                    include: {
-                        model: User,
-                        attributes: ['firstname', 'lastname', 'imgUrl']
-                    }
+                    attributes: ['id'],
                 }
             ]
         })
         .then(contents => {
-            decodeHTMLentitiesContent(contents); 
+            decodeHTMLentities(contents.rows); 
             res.status(200).json(contents);
         })
-        .catch(error => res.status(400).json({ error } + "Une erreur de transmission est survenue."));
+        .catch(error => {res.status(400).json({ error } + "Une erreur de transmission est survenue.");});
     })
     .catch(error => {res.status(400).json({error} + "Une erreur de transmission est survenue.")})
 };
@@ -76,7 +78,6 @@ const updateOne = (req, res) => {
     Content.findOne({where : {id :req.params.id}})
     .then( Content => {
         if(req.file){
-            console.log('test');
             if(Content.imgUrl != null){
                 const filename = Content.imgUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`,(err) => {
@@ -88,7 +89,10 @@ const updateOne = (req, res) => {
         Content.text = JSON.parse(req.body.content).text;
         Content.imgUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : Content.imgUrl;
         Content.save()
-        .then(() => res.status(200).json({message : 'contenu modifié.'}))
+        .then(Content => {
+            Content.text = he.decode(Content.text);
+            res.status(200).json(Content);
+        })
         .catch(error => res.status(401).json( error  + "Il manque une information dans les champs qui représente votre contenu."));
     })
     .catch(error => res.status(401).json( error  + "Une erreur de transmission de donnée est survenue."));

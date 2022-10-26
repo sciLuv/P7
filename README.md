@@ -15,6 +15,8 @@
 
 install nodeJS and its dependencies, in front-end folder : ```npm install```<br>
 create a .env file and asign a value to environnement variables<br>
+
+after all that, in front-end folder : ```yarn start```, and its open the app.
  
 ## Backend
 

@@ -36,11 +36,22 @@ const InputFile = styled.input`
         background: url(${imgRegular});
     }
 `;
+const MoreContentButton = styled.span`
+    cursor: pointer;
+    &:hover {
+        background: #e0e0e0 !important;
+        color: red;
+        transition: 0.3s;
+    }
+`;
 
 //function in link with all thing happen in the home page
 function Home() {
     //base URL of the API
     const apiURL = 'http://localhost:' + process.env.REACT_APP_BACKEND_PORT;
+
+    const [backendPage, setBackendPage] = useState(0);
+    const [maxBackendPages, setMaxBackendPages] = useState(0);
 
     //constants in link with contents show in home page
     const [contentList, setContentList] = useState([]); //state of the content seen in home page
@@ -62,7 +73,8 @@ function Home() {
     useEffect(() => {
         async function getContent() {
             //call to the API to get all content to show in home page
-            fetch(apiURL + '/content', options(authCtx))
+
+            fetch(apiURL + '/content?page=0', options(authCtx))
                 .then((res) => {
                     //if the request is failed, we delete information in sessionStorage and lead to login page
                     if (!res.ok) {
@@ -72,7 +84,9 @@ function Home() {
                     }
                 })
                 .then((data) => {
-                    setContentList(data); //updating of the state of the contents to show in home page
+                    setBackendPage(backendPage + 1); //sets the next page of content the backend has to send
+                    setContentList(data.rows); //updating of the state of the contents to show in home page
+                    setMaxBackendPages(Math.ceil(data.count / 10)); //set how many pages of content are now in the backend
                 })
                 .catch((err) => {
                     console.log(err);
@@ -84,6 +98,30 @@ function Home() {
         }
         main();
     }, []);
+
+    let addingOlderContent = async (e) => {
+        async function getContent() {
+            //call to the API to get all content to show in home page
+            fetch(apiURL + '/content?page=' + backendPage, options(authCtx))
+                .then((res) => {
+                    //if the request is failed, we delete information in sessionStorage and lead to login page
+                    if (!res.ok) {
+                        userInfoSuppr();
+                    } else {
+                        return res.json();
+                    }
+                })
+                .then((data) => {
+                    setBackendPage(backendPage + 1);
+                    setContentList(contentList.concat(data.rows)); //updating of the state of the contents to show in home page
+                    setMaxBackendPages(Math.ceil(data.count / 10)); //set how many pages of content are now in the backend
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        getContent();
+    };
 
     //Event function to adding content (in link with form)
     let handleSubmit = async (e) => {
@@ -102,7 +140,9 @@ function Home() {
                 .then((res) => res.json())
                 .then((data) => {
                     //if the call to the API is successful :
-                    setContentList(data); // change state of content to show
+                    setBackendPage(1); //sets the next page of content the backend has to send
+                    setContentList(data.rows); //updating of the state of the contents to show in home page
+                    setMaxBackendPages(Math.ceil(data.count / 10)); //set how many pages of content are now in the backend
                     //emptying inputs of form
                     setFile(null);
                     setText('');
@@ -169,6 +209,17 @@ function Home() {
                         />
                     ))}
                 </section>
+                <div className='d-flex justify-content-center m-3'>
+                    {maxBackendPages === backendPage ? null : (
+                        <MoreContentButton
+                            className='rounded rounded p-2 bg-white'
+                            onClick={(e) => addingOlderContent()}
+                        >
+                            <i className='fa-solid fa-rotate-right'></i>
+                            <span> charger les posts plus anciens...</span>
+                        </MoreContentButton>
+                    )}
+                </div>
             </ContentContainer>
         </>
     );

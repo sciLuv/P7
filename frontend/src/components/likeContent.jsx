@@ -1,5 +1,6 @@
 //style relative Import
 import styled from 'styled-components'; // to stylish component directly in the react file
+import StyledGlobalStyle from '../utilis/globalStyle.jsx';
 //React and ReactRouter elements's import
 import { useState, useContext } from 'react'; //react method to use data in state and context
 import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
@@ -38,19 +39,22 @@ function ContentLike(likes) {
 
     //here, use the bootstrap class to adding style to the component.
     return (
-        <div
+        <button
+            className='btn-neutral'
+            aria-label='like du post'
             onClick={() => {
                 liking();
             }}
         >
             <LikeIcon
+                alt="pouce en l'air"
                 className={
                     //if the user like or not the content, we change the class of the HTML elemnt
                     (likeNum === true ? 'fa-solid ' : 'fa-regular ') + 'fa-thumbs-up me-1 hover-item'
                 }
             ></LikeIcon>
             {like} {like <= 1 ? "j'aime" : "j'aimes"}
-        </div>
+        </button>
     );
 }
 

@@ -3,6 +3,7 @@ import Login from './pages/Login.jsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/home.jsx';
 import Profil from './pages/Profil.jsx';
+import Error from './pages/Error.jsx';
 import StyledGlobalStyle from './utilis/globalStyle.jsx';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
                     <Route path='/profil' element={<Profil />} />
                     <Route path='/signup' element={<Signup />} />
                     <Route path='/login' element={<Login />} />
+                    <Route path='*' element={<Error />} />
                 </Routes>
             </BrowserRouter>
         </div>

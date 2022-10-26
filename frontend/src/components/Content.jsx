@@ -2,6 +2,7 @@
 import styled from 'styled-components'; // to stylish component directly in the react file
 import imgRegular from '../assets/image-regular.svg'; //the input img btn
 import colors from '../utilis/colors.jsx'; //CSS colors value
+import StyledGlobalStyle from '../utilis/globalStyle';
 //React and ReactRouter elements's import
 import { useContext, useState } from 'react'; //react method to use data in state and context
 import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
@@ -109,6 +110,10 @@ function Content({
     //actual users informations set in react memory, available everywhere in the app.
     const authCtx = useContext(UserAuth);
 
+    //constants represant image and text, to change them when user upload news
+    const [textContent, setText] = useState(text); //text send by the backend
+    const [imgContent, setImg] = useState(img); //image send by the backend
+
     //constants in link with content new information (to upload)
     const [modifText, setModifText] = useState(text); //new text to send to the backend
     const [modifFile, setModifFile] = useState(null); //new image to send to the backend
@@ -116,32 +121,21 @@ function Content({
     //to open interface of modification of the content
     const [modifContentOpen, setModifContentOpen] = useState(false);
 
-    //to refresh contents when user update or delete one of his content
-    function newContent() {
-        //the call of the API is different in function of the page of the app (home or profil page)
-        let URLtocall = apiURL + '/content';
-        if (window.location.href == 'http://localhost:3000/profil') {
-            URLtocall = apiURL + '/user/' + userId + '/content';
-        }
-        fetch(URLtocall, options(authCtx))
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                setContentList(data); //put in state all contents to show in function of the page
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
-
     //delete the content
     let deleteContent = async () => {
         //call to the API to delete one content
         fetch(apiURL + '/content/' + contentId, options(authCtx, 'DELETE'))
             .then((res) => res.json())
             //to refresh the page after deletion
-            .then(() => newContent())
+            .then(() => {
+                //to find the element to delete in the contentList
+                let contentToDelete = contentList.findIndex((element) => element.id === contentId);
+                //create new array of content to set in after in setContentList
+                let newContentList = contentList.slice();
+                newContentList.splice(contentToDelete, 1);
+
+                setContentList(newContentList);
+            })
             .catch((err) => console.log(err));
     };
 
@@ -163,8 +157,10 @@ function Content({
                     return res.json();
                 })
                 .then((data) => {
+                    setImg(data.imgUrl);
+                    setText(data.text);
                     //if the call to the API is successful :
-                    newContent(); //refreshing the page after uploading
+                    /* newContent(); //refreshing the page after uploading */
                     setModifContentOpen(false); //close the interface of modification
                 })
                 .catch((err) => console.log(err));
@@ -176,13 +172,21 @@ function Content({
         <ContentContainer className='container m-2 p-2 bg-white'>
             <div className='d-flex justify-content-between pb-1'>
                 <div className='d-flex'>
-                    <Link to='/profil' state={userId}>
+                    <Link to='/profil' state={userId} aria-label={'profil de ' + firstname + ' ' + lastname}>
                         <div className='me-2 avatarImgContainer'>
-                            <img src={avatar} className='img-fluid rounded-circle avatar' alt='' />
+                            <img
+                                src={avatar}
+                                className='img-fluid rounded-circle avatar'
+                                alt={'avatar de ' + firstname + ' ' + lastname}
+                            />
                         </div>
                     </Link>
                     <div>
-                        <Link to='/profil' state={userId}>
+                        <Link
+                            to='/profil'
+                            state={userId}
+                            aria-label={'profil de ' + firstname + ' ' + lastname}
+                        >
                             <UserName className='d-block fw-bold'>
                                 {firstname} {lastname}
                             </UserName>
@@ -194,35 +198,39 @@ function Content({
                     //ternary operator to let the fontend possibility for user to change the content (only possible if its his own content)
                     userId === authCtx.id || authCtx.permission === true ? (
                         <div className='btn-group'>
-                            <div
-                                className='mt-2 me-2'
+                            <button
+                                className='mt-2 me-2 btn-neutral'
                                 type='button'
                                 data-bs-toggle='dropdown'
                                 aria-expanded='false'
+                                aria-label="bouton d'option du post"
                             >
                                 <i className='fa-solid fa-ellipsis-vertical fa-lg'></i>
-                            </div>
+                            </button>
                             <ul className='dropdown-menu'>
                                 <li>
-                                    <div
+                                    <button
                                         className='dropdown-item'
+                                        aria-label='modification du post'
+                                        tabIndex='0'
                                         //event to open interface of modification
                                         onClick={() => setModifContentOpen(true)}
                                     >
                                         modifier
-                                    </div>
+                                    </button>
                                 </li>
                                 <hr />
                                 <li>
-                                    <div
-                                        className='dropdown-item'
+                                    <button
+                                        className='dropdown-item btn-neutral'
+                                        tabIndex='0'
                                         //event to delete content
                                         onClick={() => {
                                             deleteContent();
                                         }}
                                     >
                                         supprimer
-                                    </div>
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -259,11 +267,22 @@ function Content({
                     </form>
                 ) : (
                     <ContentTextandImg>
-                        <TextContent>{text}</TextContent>
+                        <TextContent>{textContent}</TextContent>
                         {img == null ? null : (
                             <ImgContent className={text.length > 0 ? 'border-top' : null}>
                                 <div className='left-size'></div>
-                                <img src={img} className='img-fluid' alt='' />
+                                <img
+                                    src={imgContent}
+                                    className='img-fluid'
+                                    alt={
+                                        'image du post de' +
+                                        firstname +
+                                        ' ' +
+                                        lastname +
+                                        ' à la date du ' +
+                                        formatedDate
+                                    }
+                                />
                                 <div className='right-size'></div>
                             </ImgContent>
                         )}

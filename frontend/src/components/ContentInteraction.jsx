@@ -1,5 +1,6 @@
 //style relative Import
 import styled from 'styled-components'; // to stylish component directly in the react file
+import StyledGlobalStyle from '../utilis/globalStyle.jsx';
 //React and ReactRouter elements's import
 import { useState, useContext, useEffect } from 'react'; //react method to use data in state and context
 import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
@@ -90,10 +91,18 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
             <div className='d-flex border-top justify-content-between'>
                 <ContentLike likes={likes} usersLike={usersLike} contentId={contentId} />
 
-                <div onClick={openComment} className='hover-item'>
-                    <CommentIcon className='fa-regular fa-comment me-1'></CommentIcon>
+                <button
+                    onClick={openComment}
+                    className='hover-item btn-neutral'
+                    tabIndex='0'
+                    aria-label='ouverture des commentaires'
+                >
+                    <CommentIcon
+                        className='fa-regular fa-comment me-1'
+                        alt='bulle de bande dessinée'
+                    ></CommentIcon>
                     {commentNum} {commentNum <= 1 ? 'commentaire' : 'commentaires'}
-                </div>
+                </button>
             </div>
             {
                 //if the comment space is open

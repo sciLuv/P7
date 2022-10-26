@@ -11,7 +11,7 @@ import passwordSchema from '../models/password.js';//model of password
 import Content from '../models/content.js';//model of content
 import Comment from "../models/comment.js"; //model of comment
 
-import {decodeHTMLentitiesContent} from "../utilis/decode-function.js";
+import decodeHTMLentities from "../utilis/decode-function.js";
 //to add an user to database. 
 //If email match with model waiting by validator.isEmail, it is crypted by cryptoJS
 //if password match with model waiting by password-validator, it is encrypted by bcrypt
@@ -95,7 +95,7 @@ const userInfoAfterRefresh = (req, res) =>{
 const profilContent = (req, res) => {
     Content.findAll({
         where : { userId : req.params.id },
-        limit: 10, order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
+        order: [['createdAt', 'DESC'], [{model : Comment}, 'createdAt', 'ASC']],
         include: [{
             model: User,
             attributes: ['firstname', 'lastname', 'imgUrl']
@@ -110,7 +110,7 @@ const profilContent = (req, res) => {
         }]
     })
     .then(contents => {
-        decodeHTMLentitiesContent(contents);
+        decodeHTMLentities(contents);
         res.status(200).json(contents);
         }
     )

@@ -6,6 +6,10 @@ const StyledGlobalStyle = createGlobalStyle`
         /*request font*/
         font-family: 'Lato', sans-serif !important;
         background-color: #eaeaea;
+        
+    }
+    #test{
+        overflow: hidden;
     }
 
     /* remove base style of link HTML element */
@@ -52,6 +56,12 @@ const StyledGlobalStyle = createGlobalStyle`
         height: 100%;
         object-fit: cover;
     };
+
+    /* btn neutral style */
+    .btn-neutral{
+        border: none;
+        background-color: rgba(234, 234, 234, 0);
+    }
 
 `;
 
