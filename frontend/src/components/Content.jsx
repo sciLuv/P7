@@ -267,11 +267,12 @@ function Content({
                     </form>
                 ) : (
                     <ContentTextandImg>
-                        <TextContent>{textContent}</TextContent>
+                        <TextContent tabIndex='0'>{textContent}</TextContent>
                         {img == null ? null : (
                             <ImgContent className={text.length > 0 ? 'border-top' : null}>
                                 <div className='left-size'></div>
                                 <img
+                                    tabIndex='0'
                                     src={imgContent}
                                     className='img-fluid'
                                     alt={

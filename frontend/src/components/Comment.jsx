@@ -153,7 +153,7 @@ function Comment({
                                     </div>
                                 </Link>
 
-                                <span>{text}</span>
+                                <span tabIndex='0'>{text}</span>
                             </CommentText>
                         ) : null
                     }

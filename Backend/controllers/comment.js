@@ -1,6 +1,6 @@
 import Comment from "../models/comment.js"; //model of comment
 import User from '../models/user.js'; //model of user
-import likeFunction from "../utilis/like-function.js"; //function to add like
+import likeFunction from "../utilis/like-function.js"; //function to add like 
 import decodeHTMLentities from "../utilis/decode-function.js";
 
 //find all the comments in link with one content

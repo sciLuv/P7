@@ -30,7 +30,7 @@ app.use(cors());
 app.use(express.json());
 
 
-/* //implementation of the rules of limitation of request by IP
+//implementation of the rules of limitation of request by IP
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minutes
 	max: 30, // Limit each IP to 60 requests per `window` (here, per 5 minutes)
@@ -38,7 +38,7 @@ const limiter = rateLimit({
 	legacyHeaders: false, //Disable `X-RateLimit-*` headers 
 })
 //Applies rate limiting middleware to all requests
-app.use(limiter); */
+app.use(limiter);
 
 
 //makes the images accessible for all requests to the route associated with the images
