@@ -1,6 +1,7 @@
 //style relative Import
 import styled from 'styled-components'; // to stylish component directly in the react file
 import imgRegular from '../assets/image-regular.svg'; //image of the file adding input
+import StyledGlobalStyle from '../utilis/globalStyle';
 //React and ReactRouter elements's import
 import { useEffect, useState, useContext } from 'react'; //react method to use data in state and context
 import { UserAuth } from '../utilis/contextValue.jsx'; //function to put user information to the context of the app
@@ -9,7 +10,7 @@ import { useNavigate } from 'react-router-dom'; //react-dom method to go to anot
 import Content from '../components/Content.jsx'; //content component
 import Header from '../components/Header.jsx'; //header component
 //function
-import userConnect from '../utilis/reconnection.jsx'; //call to the API to find again user info with token in sessionStorage
+import userConnect from '../utilis/reconnexion.jsx'; //call to the API to find again user info with token in sessionStorage
 import userInfoSuppr from '../utilis/userInfoSuppr.jsx'; //delete data in session storage
 import options from '../utilis/requestOptions.jsx'; //function to manage option of the call of the API
 import whiteSpaceVerification from '../utilis/formStringValidation.jsx'; //function to validate the form of text send to the backend
@@ -36,7 +37,7 @@ const InputFile = styled.input`
         background: url(${imgRegular});
     }
 `;
-const MoreContentButton = styled.span`
+const MoreContentButton = styled.button`
     cursor: pointer;
     &:hover {
         background: #e0e0e0 !important;
@@ -212,7 +213,7 @@ function Home() {
                 <div className='d-flex justify-content-center m-3'>
                     {maxBackendPages === backendPage ? null : (
                         <MoreContentButton
-                            className='rounded rounded p-2 bg-white'
+                            className='rounded rounded p-2 bg-white btn-neutral'
                             onClick={(e) => addingOlderContent()}
                         >
                             <i className='fa-solid fa-rotate-right'></i>

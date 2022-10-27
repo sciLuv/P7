@@ -52,7 +52,7 @@ User.hasMany(Comment, {
 Content.belongsTo(User);
 Comment.belongsTo(User);
 
-//intrication of comment in Content, by his userId value
+//intrication of comment in Content, by his contentId value
 Content.hasMany(Comment, {
     foreignKey: 'contentId'
 })

@@ -15,7 +15,7 @@ import { signup, login, userInfoAfterRefresh, profilContent, getOneUser, profilC
 router.post('/signup', signup);
 //POST to connect user to the website (with adding session token)
 router.post('/login', login);
-//Get actual infor of the user when navigator refeshing page 
+//Get actual information of the user when navigator refeshing page 
 router.get('/user/me', auth, userInfoAfterRefresh);
 //Get to have information relative to an user
 router.get('/user/:id', auth, getOneUser);

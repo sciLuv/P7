@@ -9,7 +9,7 @@ import { useNavigate, useLocation } from 'react-router-dom'; //react-dom method 
 import Content from '../components/Content.jsx'; //content component
 import Header from '../components/Header.jsx'; //header component
 //function
-import userConnect from '../utilis/reconnection'; //call to the API to find again user info with token in sessionStorage
+import userConnect from '../utilis/reconnexion'; //call to the API to find again user info with token in sessionStorage
 import userInfoSuppr from '../utilis/userInfoSuppr.jsx'; //delete data in session storage
 import options from '../utilis/requestOptions.jsx'; //function to manage option of the call of the API
 
