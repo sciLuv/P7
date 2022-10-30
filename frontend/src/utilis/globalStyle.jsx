@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
 const StyledGlobalStyle = createGlobalStyle`
-
     body{
         /*request font*/
         font-family: 'Lato', sans-serif !important;

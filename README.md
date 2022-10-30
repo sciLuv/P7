@@ -3,6 +3,11 @@
 **Private social media for members of the fictional groupomania compagnie.**
 **Its the 7th, and the last, project of the OpenClassrooms dev web course.**
 
+## initialize the project
+
+in your command-line-interface, select the folder you want for the project and write : 
+```git clone https://github.com/sciLuv/P7.git```
+
 ## Frontend
  A REACT APP Build with CREATE REACT APP
 
@@ -43,4 +48,13 @@ A REST API with CRUD operations, and a MySQL database who manage 3 tables.
 
 install nodeJS and its dependencies : ```npm install```<br>
 create a .env file and asign a value to environnement variables<br>
+
+you have to create your MySQL database, with the same information put in the .env files.<br>
+To do it you have to write in your command-line-interface in MySQL: 
+``` GRANT ALL PRIVILEGES ON *.* TO '[DB_USER]'@'localhost' IDENTIFIED BY '[DB_PASSWORD]';```<br>
+after that, to login you to your database : 
+```mysql -u [DB_USER] -p```
+and you create the new database with : 
+```CREATE DATABASE [DB_NAME];```<br><br>
+
 run the server of the backend : ```nodemon app.js``` 
