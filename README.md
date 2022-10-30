@@ -50,10 +50,10 @@ install nodeJS and its dependencies : ```npm install```<br>
 create a .env file and asign a value to environnement variables<br>
 
 you have to create your MySQL database, with the same information put in the .env files.<br>
-To do it you have to write in your command-line-interface in MySQL: 
+To do it you have to write in your command-line-interface in MySQL: <br>
 ``` GRANT ALL PRIVILEGES ON *.* TO '[DB_USER]'@'localhost' IDENTIFIED BY '[DB_PASSWORD]';```<br>
 after that, to login you to your database : 
-```mysql -u [DB_USER] -p```
+```mysql -u [DB_USER] -p```<br>
 and you create the new database with : 
 ```CREATE DATABASE [DB_NAME];```<br><br>
 
