@@ -243,6 +243,7 @@ function Content({
                 modifContentOpen === true ? (
                     <form onSubmit={uploadContent} className='mt-2'>
                         <textarea
+                            aria-label='input de modification du texte du post'
                             className='form-control'
                             id='exampleFormControlTextarea1'
                             //in link with the state of the modifying text to send
@@ -254,6 +255,7 @@ function Content({
                         ></textarea>
                         <div className='d-flex justify-content-between mt-2'>
                             <InputFile
+                                aria-label="input de modification de l'image du post"
                                 type='file'
                                 //props to send info to style of the button of input of adding file, to give feedback to the user
                                 isfile={modifFile === null ? false : true}

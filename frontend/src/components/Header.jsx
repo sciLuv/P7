@@ -64,12 +64,14 @@ function Header() {
     //here, use the bootstrap class to adding style to the component.
     return (
         <StyledHeader className='d-flex justify-content-between'>
-            <Link to='/' aria-label="page d'acceuil">
-                <StyledLogo>
-                    <img src={logo} alt='logo de groupomania' />
-                    <LogoNameContain src={logoName} alt='logo de groupomania' />
-                </StyledLogo>
-            </Link>
+            <h1>
+                <Link to='/' aria-label="page d'acceuil">
+                    <StyledLogo>
+                        <img src={logo} alt='logo de groupomania' />
+                        <LogoNameContain src={logoName} alt='reste du logo de groupomania' />
+                    </StyledLogo>
+                </Link>
+            </h1>
             <nav className='navbar'>
                 <ul className='navbar-nav d-flex flex-row'>
                     {
@@ -124,7 +126,6 @@ function Header() {
                                         </button>
                                         <DeconnectDropDown
                                             className='dropdown-menu position-absolute'
-                                            aria-labelledby='dropdownMenuButton'
                                             profil={!(idProfil - authCtx.id === 0)}
                                         >
                                             <li>

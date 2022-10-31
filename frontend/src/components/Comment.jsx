@@ -163,6 +163,7 @@ function Comment({
                         isModifOpen === true ? (
                             <form className='col-12 mt-1' onKeyPress={uploadComment}>
                                 <textarea
+                                    aria-label='modification du texte du commentaire'
                                     autoFocus
                                     className='form-control'
                                     tabIndex='0'

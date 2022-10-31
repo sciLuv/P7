@@ -166,14 +166,16 @@ function Home() {
                     <form onSubmit={handleSubmit} className='col-md-11 col-10'>
                         <textarea
                             className='form-control'
-                            id='exampleFormControlTextarea1'
+                            id='text-area-new-content'
                             value={text}
+                            aria-label='input pour envoyer un nouveau post'
                             onChange={(e) => setText(e.target.value)}
                             rows='1'
                             placeholder='Quelque chose a partager a vos collegues ?'
                         ></textarea>
                         <div className='d-flex justify-content-between mt-2'>
                             <InputFile
+                                aria-label='input pour envoyer une image dans un nouveau post'
                                 type='file'
                                 //to send info to the style in function of the state of file selection
                                 isfile={file === null ? false : true}

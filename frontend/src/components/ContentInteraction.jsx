@@ -130,6 +130,7 @@ function ContentInteraction({ likes, comments, contentId, usersLike }) {
 
                         <form className='col-12 mt-1' onKeyPress={handlePressKey}>
                             <textarea
+                                aria-label="ajout d'un nouveau commentaire"
                                 className='form-control'
                                 id='comment-input'
                                 rows='1'
